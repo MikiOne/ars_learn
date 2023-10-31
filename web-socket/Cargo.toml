@@ -8,10 +8,10 @@ edition = "2021"
 
 [[bin]]
 name = "ws-server"
-path = "src/ws_server.rs"
+path = "src/tokio_tungstenite/ws_server.rs"
 [[bin]]
 name = "ws-client"
-path = "src/ws_client.rs"
+path = "src/tokio_tungstenite/ws_client.rs"
 
 [dependencies]
 futures = { version = "0.3.29" }
@@ -23,3 +23,4 @@ tracing-subscriber = { version = "0.3.17", features = [] }
 futures-util = "0.3.29"
 futures-channel = "0.3.29"
 url = "2.4.1"
+tungstenite = "0.20.1"

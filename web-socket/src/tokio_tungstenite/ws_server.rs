@@ -1,9 +1,9 @@
-use std::collections::HashMap;
-use std::net::SocketAddr;
-use std::sync::{Arc, Mutex};
 use futures::channel::mpsc;
 use futures::channel::mpsc::UnboundedSender;
 use futures::{future, StreamExt, TryStreamExt};
+use std::collections::HashMap;
+use std::net::SocketAddr;
+use std::sync::{Arc, Mutex};
 use tokio::net::{TcpListener, TcpStream};
 use tokio_tungstenite::tungstenite::Message;
 use tracing::{error, info, warn};
@@ -11,7 +11,6 @@ use tracing::{error, info, warn};
 type WsResult<T> = anyhow::Result<T>;
 type MsgTx = UnboundedSender<Message>;
 type PeerMap = Arc<Mutex<HashMap<SocketAddr, MsgTx>>>;
-
 
 const WS_ADDR: &str = "127.0.0.1:8033";
 
@@ -30,7 +29,11 @@ async fn main() -> WsResult<()> {
     }
 }
 
-async fn handle_connection(tcp_stream: TcpStream, client_addr: SocketAddr, peers: PeerMap) -> WsResult<()> {
+async fn handle_connection(
+    tcp_stream: TcpStream,
+    client_addr: SocketAddr,
+    peers: PeerMap,
+) -> WsResult<()> {
     let ws_stream = tokio_tungstenite::accept_async(tcp_stream).await?;
     info!("Client [{}] WebSocket链接已建立", &client_addr);
 
@@ -72,9 +75,9 @@ fn handle_message(msg: Message, client_addr: SocketAddr, peers: PeerMap) {
     };
 
     match msg.clone() {
-        Message::Text(text) => { handle_text(text) }
-        Message::Close(_) => {
-            warn!("Client[{}] is close", &client_addr);
+        Message::Text(text) => handle_text(text),
+        Message::Close(cls) => {
+            warn!("Client[{}] is close: {:?}", &client_addr, &cls);
             peers.lock().unwrap().remove(&client_addr);
         }
         _ => {
@@ -83,4 +86,3 @@ fn handle_message(msg: Message, client_addr: SocketAddr, peers: PeerMap) {
         }
     }
 }
-
