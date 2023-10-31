@@ -12,6 +12,6 @@ members = [
 
 # [[bin]]
 # name = "ws-server"
-# path = "projs/web-socket/src/main.rs"
+# path = "projs/web-socket/src/ws_server"
 
 [dependencies]

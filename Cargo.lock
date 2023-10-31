@@ -797,6 +797,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9c8d87e72b64a3b4db28d11ce29237c246188f4f51057d65a7eab63b7987e423"
 
 [[package]]
+name = "web_socket"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "futures",
+ "futures-channel",
+ "futures-util",
+ "tokio",
+ "tokio-tungstenite",
+ "tracing",
+ "tracing-subscriber",
+ "url",
+]
+
+[[package]]
 name = "winapi"
 version = "0.3.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -883,15 +898,3 @@ name = "windows_x86_64_msvc"
 version = "0.48.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ed94fce61571a4006852b7389a063ab983c02eb1bb37b47f8272ce92d06d9538"
-
-[[package]]
-name = "ws_demo"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "futures",
- "tokio",
- "tokio-tungstenite",
- "tracing",
- "tracing-subscriber",
-]
