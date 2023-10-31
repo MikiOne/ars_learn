@@ -1,0 +1,17 @@
+[package]
+name = "ars_learn"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[workspace]
+members = [
+    "web-socket",
+]
+
+# [[bin]]
+# name = "ws-server"
+# path = "projs/web-socket/src/main.rs"
+
+[dependencies]
