@@ -4,7 +4,7 @@ use std::env;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio_tungstenite::{
     connect_async,
-    tungstenite::{protocol::Message, Error},
+    tungstenite::protocol::Message,
 };
 
 #[tokio::main]

@@ -11,7 +11,6 @@ use tungstenite::protocol::frame::coding::CloseCode;
 use tungstenite::protocol::CloseFrame;
 use tungstenite::Message;
 use url::Url;
-use tokio::task;
 
 type WsResult = anyhow::Result<()>;
 

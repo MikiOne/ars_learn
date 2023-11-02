@@ -1,7 +1,6 @@
 use futures::channel::mpsc;
 use futures::channel::mpsc::UnboundedSender;
 use futures::{future, StreamExt, TryStreamExt};
-use futures_util::SinkExt;
 use std::collections::HashMap;
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
