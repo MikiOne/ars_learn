@@ -1,6 +1,7 @@
 use futures::channel::mpsc;
 use futures::channel::mpsc::UnboundedSender;
 use futures::{future, StreamExt, TryStreamExt};
+use futures_util::SinkExt;
 use std::collections::HashMap;
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
@@ -57,7 +58,7 @@ async fn handle_connection(
 
 fn handle_message(msg: Message, client_addr: SocketAddr, peers: PeerMap) {
     let handle_text = |text| {
-        info!("Receive text of msg {}", &text);
+        info!("Receive text of msg: {}", &text);
 
         let peers = peers.lock().unwrap();
         let receivers = peers.iter().filter(|(addr, _)| addr != &&client_addr);
@@ -78,7 +79,14 @@ fn handle_message(msg: Message, client_addr: SocketAddr, peers: PeerMap) {
         Message::Text(text) => handle_text(text),
         Message::Close(cls) => {
             warn!("Client[{}] is close: {:?}", &client_addr, &cls);
-            peers.lock().unwrap().remove(&client_addr);
+            if let Some(msg_tx) = peers.lock().unwrap().remove(&client_addr) {
+                let is_closed = msg_tx.is_closed();
+                if !is_closed {
+                    info!("drop msg_tx.is_closed(): {}", msg_tx.is_closed());
+                    drop(msg_tx);
+                    // let _ = msg_tx.unbounded_send(Message::Close(None));
+                }
+            }
         }
         _ => {
             error!("Unsupported message type");
