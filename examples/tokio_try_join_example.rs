@@ -1,5 +1,5 @@
 use tokio::task;
-use tokio::time::{Duration, sleep};
+use tokio::time::{sleep, Duration};
 
 async fn task1() -> Result<String, String> {
     sleep(Duration::from_secs(1)).await;
