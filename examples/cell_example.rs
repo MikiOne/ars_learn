@@ -7,10 +7,7 @@ struct Point {
 
 impl Point {
     fn new(x: i32, y: i32) -> Self {
-        Point {
-            x: Cell::new(x),
-            y: Cell::new(y),
-        }
+        Point { x: Cell::new(x), y: Cell::new(y) }
     }
 
     fn move_point(&self, dx: i32, dy: i32) {

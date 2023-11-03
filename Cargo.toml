@@ -8,6 +8,7 @@ edition = "2021"
 [workspace]
 members = [
     "web-socket",
+    "ntex-yew"
 ]
 
 # [[bin]]
