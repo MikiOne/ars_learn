@@ -2,10 +2,7 @@ use futures_channel::mpsc;
 use futures_util::{future, pin_mut, SinkExt, StreamExt};
 use std::env;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
-use tokio_tungstenite::{
-    connect_async,
-    tungstenite::protocol::Message,
-};
+use tokio_tungstenite::{connect_async, tungstenite::protocol::Message};
 
 #[tokio::main]
 async fn main() {
