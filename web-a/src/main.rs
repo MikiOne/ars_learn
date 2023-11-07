@@ -9,7 +9,8 @@ use web_a::{ConnMng, DbPool, hf_dict_ctrl};
 
 #[ntex::main]
 async fn main() -> std::io::Result<()> {
-    env::set_var("RUST_LOG", "ntex=info,diesel=debug");
+    env::set_var("RUST_BACKTRACE", "1");
+    env::set_var("RUST_LOG", "info, ntex=info,diesel=debug");
     env_logger::init();
     dotenv::dotenv().ok();
 
