@@ -10,3 +10,7 @@ ntex = { version = "0.7", features = ["tokio"] }
 anyhow = { version = "1.0.75", features = [] }
 serde = "1.0.190"
 futures = "0.3.29"
+ntex-files = "0.3.0"
+derive_more = "0.99.17"
+env_logger = "0.8"
+log = "0.4"
