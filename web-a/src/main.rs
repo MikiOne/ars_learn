@@ -1,16 +1,11 @@
 use std::env;
 
+use diesel::pg::PgConnection;
 use diesel::r2d2::ConnectionManager;
-use diesel::SqliteConnection;
 use log::info;
-use ntex::web;
-use ntex::web::middleware;
+use ntex::web::{middleware, App, HttpServer};
+use web_a::{ConnMng, DbPool, hf_dict_ctrl};
 
-use crate::diesel_ns::controller;
-
-type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
-
-mod diesel_ns;
 
 #[ntex::main]
 async fn main() -> std::io::Result<()> {
@@ -21,17 +16,15 @@ async fn main() -> std::io::Result<()> {
     let db_url = env::var("DATABASE_URL").expect("DATABASE_URL");
     info!("db_url: {}", &db_url);
 
-    let manager = ConnectionManager::<SqliteConnection>::new(db_url);
+    let manager: ConnMng = ConnectionManager::<PgConnection>::new(db_url);
     let pool: DbPool = r2d2::Pool::builder().build(manager).expect("Failed to create pool.");
 
     let bind = "127.0.0.1:8080";
     info!("Starting server at: {}", &bind);
 
-    web::HttpServer::new(move || {
-        web::App::new()
-            .state(pool.clone())
-            .wrap(middleware::Logger::default())
-            .service((controller::get_user, controller::add_user))
+    HttpServer::new(move || {
+        App::new().state(pool.clone()).wrap(middleware::Logger::default())
+        .service((hf_dict_ctrl::get_by_id))
     })
     .bind(&bind)?
     .run()
