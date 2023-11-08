@@ -1,5 +1,5 @@
-use diesel::{OptionalExtension, PgConnection, QueryDsl, RunQueryDsl};
 use crate::models;
+use diesel::{OptionalExtension, PgConnection, QueryDsl, RunQueryDsl};
 
 pub fn find_by_id(
     dict_id: i32,

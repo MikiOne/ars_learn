@@ -1,6 +1,6 @@
+use crate::{hf_dict_dao, DbPool};
 use ntex::web;
 use ntex::web::HttpResponse;
-use crate::{DbPool, hf_dict_dao};
 
 #[web::get("/hf/dict/get/{dict_id}")]
 pub async fn get_by_id(
@@ -8,7 +8,7 @@ pub async fn get_by_id(
     dict_id: web::types::Path<i32>,
 ) -> Result<HttpResponse, web::Error> {
     let dict_id = dict_id.into_inner();
-    let mut conn  = pool.get().expect("couldn't get db connection from pool");
+    let mut conn = pool.get().expect("couldn't get db connection from pool");
 
     let hf_dict = web::block(move || hf_dict_dao::find_by_id(dict_id, &mut conn)).await?;
 
