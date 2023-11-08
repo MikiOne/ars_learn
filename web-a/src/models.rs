@@ -1,6 +1,6 @@
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Queryable, Selectable)]
 #[diesel(table_name = crate::schema::hf_dict)]
@@ -13,4 +13,10 @@ pub struct HfDict {
     pub name: Option<String>,
     pub remark: Option<String>,
     pub create_time: NaiveDateTime,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LoginBO {
+    pub code: String,
+    pub name: String,
 }
