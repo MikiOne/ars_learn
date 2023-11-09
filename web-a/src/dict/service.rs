@@ -1,4 +1,4 @@
-use crate::common::error::AppError;
+use crate::common::error::WebAppError;
 use diesel::{
     BoolExpressionMethods, ExpressionMethods, OptionalExtension, PgConnection, QueryDsl,
     RunQueryDsl,
@@ -20,7 +20,7 @@ pub fn find_by_id(
 pub fn find_with_login(
     bo: LoginBO,
     conn: &mut PgConnection,
-) -> Result<Option<models::HfDict>, AppError> {
+) -> Result<Option<models::HfDict>, WebAppError> {
     use crate::schema::hf_dict::dsl::*;
     let res = hf_dict
         .filter(name.eq(bo.name).and(code.eq(bo.code)))

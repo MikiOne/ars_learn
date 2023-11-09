@@ -1,9 +1,10 @@
+use log::{error, info};
+use ntex::web;
+use ntex::web::HttpResponse;
+
 use crate::common::DbPool;
 use crate::dict;
 use crate::models::LoginBO;
-use log::{error, info, warn};
-use ntex::web;
-use ntex::web::HttpResponse;
 
 #[web::get("/hf/dict/get/{dict_id}")]
 pub async fn get_by_id(

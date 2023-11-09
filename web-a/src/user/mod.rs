@@ -6,7 +6,7 @@ use serde_json::json;
 
 use crate::auth::jwt;
 use crate::auth::models::Role;
-use crate::common::error::AppError;
+use crate::common::error::WebAppError;
 use crate::common::DbPool;
 use crate::dict;
 use crate::models::LoginBO;
@@ -15,7 +15,7 @@ use crate::models::LoginBO;
 pub async fn user_login(
     pool: State<DbPool>,
     bo: Json<LoginBO>,
-) -> Result<impl Responder, AppError> {
+) -> Result<impl Responder, WebAppError> {
     let mut conn = pool.get().expect("couldn't get db connection from pool");
 
     if let Some(res) = dict::service::find_with_login(bo.clone(), &mut conn)? {

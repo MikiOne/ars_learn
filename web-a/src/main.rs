@@ -3,11 +3,11 @@ use std::env;
 use diesel::pg::PgConnection;
 use diesel::r2d2::ConnectionManager;
 use log::info;
-use ntex::web::{middleware, App, HttpServer, WebRequest};
+use ntex::web::{middleware, App, HttpServer};
 
-use web_a::auth::{self, jwt};
 use web_a::common::{ConnMng, DbPool};
 use web_a::dict::controller;
+use web_a::middleware::auth_filter;
 use web_a::user;
 
 #[ntex::main]
@@ -45,7 +45,7 @@ async fn main() -> std::io::Result<()> {
             //     Ok(req)
             // })
             .wrap(middleware::Logger::default())
-            .wrap(auth::filter::JwtFilter)
+            .wrap(auth_filter::JwtFilter)
             .service((controller::get_by_id, user::user_login))
     })
     .bind(&bind)?
