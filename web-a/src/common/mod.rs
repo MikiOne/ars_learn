@@ -1,6 +1,7 @@
 use diesel::r2d2::ConnectionManager;
 use diesel::PgConnection;
 
+pub mod consts;
 pub mod error;
 
 pub type ConnMng = ConnectionManager<PgConnection>;

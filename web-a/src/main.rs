@@ -46,7 +46,7 @@ async fn main() -> std::io::Result<()> {
             // })
             .wrap(middleware::Logger::default())
             .wrap(auth_filter::JwtFilter)
-            .service((controller::get_by_id, user::user_login))
+            .service((controller::get_by_id, user::login, user::logout))
     })
     .bind(&bind)?
     .run()

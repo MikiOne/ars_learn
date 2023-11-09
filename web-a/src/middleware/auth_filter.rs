@@ -1,11 +1,14 @@
 use futures::future::{self, Either, Ready};
 use log::{error, info};
+use ntex::http::header;
+use ntex::http::header::{HeaderName, HeaderValue};
 use ntex::service::{Middleware, Service, ServiceCtx};
 use ntex::web::{Error, ErrorRenderer, HttpResponse, WebRequest, WebResponse};
 use ntex::ServiceCall;
 use serde_json::json;
 
-use crate::auth::jwt;
+use crate::auth::jwt_handler;
+use crate::common::consts::JWT_USER;
 
 pub struct JwtFilter;
 
@@ -33,19 +36,24 @@ where
     ntex::forward_poll_ready!(service);
     ntex::forward_poll_shutdown!(service);
 
-    fn call<'a>(&'a self, req: WebRequest<Err>, ctx: ServiceCtx<'a, Self>) -> Self::Future<'a> {
+    fn call<'a>(&'a self, mut req: WebRequest<Err>, ctx: ServiceCtx<'a, Self>) -> Self::Future<'a> {
         if req.path() == "/user/login" {
             return Either::Left(ctx.call(&self.service, req));
         }
 
         let headers = req.headers();
-        return match jwt::get_jwt_user(headers) {
-            Ok(val) => {
-                info!("uid: {}", val.uid);
+        return match jwt_handler::get_jwt_user(headers) {
+            Ok(user) => {
+                let user_str = serde_json::to_string(&user).unwrap();
+                info!("jwt user: {}", &user_str);
+                req.headers_mut().insert(
+                    HeaderName::from_static(JWT_USER),
+                    HeaderValue::from_str(user_str.as_str()).unwrap(),
+                );
                 Either::Left(ctx.call(&self.service, req))
             }
             Err(err) => {
-                error!("auth error: {:?}", &err);
+                error!("auth filter, error: {:?}", &err);
                 let err_str = err.to_string();
                 let json = json!({"code": "0004","msg": err_str});
                 Either::Right(future::ok(

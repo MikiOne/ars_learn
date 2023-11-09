@@ -7,7 +7,7 @@ pub enum Role {
     Admin,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 pub struct BaseUser {
     pub uid: String,
 }
