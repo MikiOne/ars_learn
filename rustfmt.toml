@@ -5,3 +5,19 @@
 use_small_heuristics = "Max"
 
 imports_granularity = "Crate"
+
+# 每行代码的最大长度
+max_width = 100
+
+# 缩进宽度
+tab_spaces = 4
+
+# 使用空格替代制表符
+emit_mode = "Stdout"
+
+# 将连续的 if-else 语句格式化为 if-else if-else
+format_strings = true
+
+# 在数组、元组等结构的括号之间插入空格
+space_after_colon = true
+# 等等...

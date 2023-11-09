@@ -1,14 +1,14 @@
 use log::info;
 use ntex::web;
-use ntex::web::{HttpResponse, Responder};
 use ntex::web::types::{Json, State};
+use ntex::web::{HttpResponse, Responder};
 use serde_json::json;
 
-use crate::{auth, dict};
 use crate::auth::Role;
-use crate::common::DbPool;
 use crate::common::error::AppError;
+use crate::common::DbPool;
 use crate::models::LoginBO;
+use crate::{auth, dict};
 
 async fn index(id: i32) -> String {
     format!("Hello {}", id)
