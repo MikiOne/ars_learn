@@ -1,7 +1,7 @@
 use crate::common::DbPool;
 use crate::dict;
 use crate::models::LoginBO;
-use log::info;
+use log::{error, info, warn};
 use ntex::web;
 use ntex::web::HttpResponse;
 
@@ -24,7 +24,9 @@ pub async fn get_by_id(
     if let Some(hf_dict) = hf_dict {
         Ok(HttpResponse::Ok().json(&hf_dict))
     } else {
-        let res = HttpResponse::NotFound().body(format!("No hf_dict found with id: {}", dict_id));
+        let not_found = format!("No hf_dict found with id: {}", dict_id);
+        error!("{}", &not_found);
+        let res = HttpResponse::NotFound().body(not_found);
         Ok(res)
     }
 }

@@ -5,9 +5,10 @@ use diesel::r2d2::ConnectionManager;
 use log::info;
 use ntex::web::{middleware, App, HttpServer, WebRequest};
 
+use web_a::auth::{self, jwt};
 use web_a::common::{ConnMng, DbPool};
 use web_a::dict::controller;
-use web_a::{auth, user};
+use web_a::user;
 
 #[ntex::main]
 async fn main() -> std::io::Result<()> {
@@ -28,22 +29,23 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .state(pool.clone())
-            .filter(|req: WebRequest<_>| async move {
-                info!("Hi from start. You requested: {}", req.path());
-                // auth::authorize((req.headers()));
-                let jwt_str = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyOCIsInJvbGUiOiJVc2VyIiwiZXhwIjoxNjk5NTA4NzQ5fQ.15F-bQPelGT_hWeXENgl-jzZ8PcAXw91vwsCiJO5qLNpOAaJ8rdpWSJPy7bgaFREJGaFURVTvbjSdZfDcec5gg".to_string();
-                let res = auth::decode_jwt(jwt_str);
-                info!("auth::decode_jwt(jwt_str): {:?}", res);
-                if let Some(token) = req.headers().get("Token") {
-                    // 处理获取到的 token 值
-                    println!("Token value: {:?}", token);
-                } else {
-                    // 如果没有找到 "Token" 头部，则返回错误或默认值
-                    // return Err(Error::from_str(404, "Token header not found"));
-                }
-                Ok(req)
-            })
+            // .filter(|req: WebRequest<_>| async move {
+            //     info!("Hi from start. You requested: {}", req.path());
+            //     // auth::authorize((req.headers()));
+            //     let jwt_str = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyOCIsInJvbGUiOiJVc2VyIiwiZXhwIjoxNjk5NTA4NzQ5fQ.15F-bQPelGT_hWeXENgl-jzZ8PcAXw91vwsCiJO5qLNpOAaJ8rdpWSJPy7bgaFREJGaFURVTvbjSdZfDcec5gg".to_string();
+            //     let res = jwt::decode_jwt(jwt_str);
+            //     info!("auth::decode_jwt(jwt_str): {:?}", res);
+            //     if let Some(token) = req.headers().get("Token") {
+            //         // 处理获取到的 token 值
+            //         println!("Token value: {:?}", token);
+            //     } else {
+            //         // 如果没有找到 "Token" 头部，则返回错误或默认值
+            //         // return Err(Error::from_str(404, "Token header not found"));
+            //     }
+            //     Ok(req)
+            // })
             .wrap(middleware::Logger::default())
+            .wrap(auth::filter::JwtFilter)
             .service((controller::get_by_id, user::user_login))
     })
     .bind(&bind)?
