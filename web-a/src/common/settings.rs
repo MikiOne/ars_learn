@@ -19,7 +19,8 @@ pub struct Settings {
 impl Settings {
     pub fn new() -> Result<Self, ConfigError> {
         let run_mode = env::var("RUN_MODE").unwrap_or_else(|_| "dev".into());
-        let path = format!("/Users/egal/workspace/rust_ws/ars_config/ars_learn/web-a-{}", run_mode);
+        let config_path = env::var("CONFIG_PATH").expect("请指定配置文件路径");
+        let path = format!("{}{}", config_path, run_mode);
 
         let config = File::with_name(&path).required(false);
         let s = Config::builder().add_source(config).build()?;
