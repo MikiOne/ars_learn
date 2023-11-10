@@ -19,3 +19,4 @@ members = [
 
 [dependencies]
 tokio = { version = "1.33.0", features = ["full"] }
+config = "0.13.3"

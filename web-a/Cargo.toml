@@ -23,3 +23,5 @@ r2d2 = "0.8.10"
 chrono = { version = "0.4.31", features = ["serde"] }
 jsonwebtoken = "9.1.0"
 thiserror = "1.0.50"
+config = "0.13.3"
+serde_derive = "1.0.192"

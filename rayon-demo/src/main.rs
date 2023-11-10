@@ -20,7 +20,7 @@ fn main() -> reqwest::Result<()> {
     //     // finally, join all files
 
     let names = vec!["egal"];
-    let is_present = names.par_iter().any(|name| name == "Alice");
+    // let is_present = names.par_iter().any(|name| name == "Alice");
 
     Ok(())
 }
