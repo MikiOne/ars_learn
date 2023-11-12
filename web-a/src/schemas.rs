@@ -1,15 +1,17 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
-    hf_dict (id) {
+    wa_users (id) {
         id -> Int4,
-        group -> Int2,
-        #[max_length = 10]
-        code -> Nullable<Varchar>,
         #[max_length = 100]
-        name -> Nullable<Varchar>,
+        name -> Varchar,
+        #[max_length = 100]
+        email -> Varchar,
+        #[max_length = 200]
+        pwd_hash -> Nullable<Varchar>,
         #[max_length = 500]
         remark -> Nullable<Varchar>,
         create_time -> Timestamp,
+        update_time -> Timestamp,
     }
 }

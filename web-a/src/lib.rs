@@ -1,7 +1,7 @@
 pub mod auth;
 pub mod common;
 pub mod dict;
+mod main_bak;
 pub mod middleware;
-mod models;
-mod schema;
+pub mod schemas;
 pub mod user;
