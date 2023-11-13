@@ -1,15 +1,12 @@
 use log::error;
 use ntex::http::error::BlockingError;
-use ntex::web;
-use ntex::web::{HttpResponse, WebResponseError};
+use ntex::web::HttpResponse;
 use serde_derive::Serialize;
 
 use crate::common::biz_code::BizCode;
 use crate::common::biz_err::BizError;
-use crate::common::error::WebAppError;
 
 pub type BizResult<T> = Result<T, BizError>;
-// pub type BizResExt<T> = Result<T, dyn WebResponseError>;
 
 #[derive(Debug, Clone, Serialize)]
 pub struct RespData<T> {
@@ -41,9 +38,9 @@ impl RespData<()> {
         HttpResponse::Ok().json(&resp_data)
     }
 
-    pub fn with_biz_code_err(err: &String, biz_code: BizCode) -> HttpResponse {
+    pub fn with_biz_code_err(biz_code: BizCode, err: &String) -> HttpResponse {
         let msg = biz_code.reason().unwrap().to_string();
-        let err_msg = format!("{} {}", msg, err);
+        let err_msg = format!("{}: {}", msg, err);
         let resp_data = RespData { code: biz_code.code().to_string(), msg: err_msg, data: {} };
         HttpResponse::Ok().json(&resp_data)
     }
@@ -68,8 +65,8 @@ impl RespData<()> {
         match blocking_err {
             BlockingError::Error(biz_error) => RespData::from_biz_error(&biz_error),
             err => {
-                error!("Wet block blockingError: {}", err);
-                RespData::with_biz_code_err(&err.to_string(), BizCode::SYSTEM_ERROR)
+                error!("Web block error: {:?}", err);
+                RespData::with_biz_code_err(BizCode::SYSTEM_ERROR, &err.to_string())
             }
         }
     }
