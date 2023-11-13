@@ -1,6 +1,9 @@
 use crate::auth::error::AuthError;
-use ntex::http::StatusCode;
-use ntex::web::{HttpRequest, HttpResponse, WebResponseError};
+use ntex::http::{Response, StatusCode};
+use ntex::util::Ready;
+use ntex::web;
+use ntex::web::{HttpRequest, HttpResponse, Responder, WebResponseError};
+use serde_derive::Serialize;
 use thiserror::Error;
 
 #[derive(Debug, Error)]
@@ -14,6 +17,7 @@ pub enum WebAppError {
     #[error("Authorization failed: {0:?}")]
     AuthError(#[from] AuthError),
 }
+
 
 impl WebResponseError for WebAppError {
     fn status_code(&self) -> StatusCode {

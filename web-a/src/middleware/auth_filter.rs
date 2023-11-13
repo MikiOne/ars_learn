@@ -1,6 +1,5 @@
 use futures::future::{self, Either, Ready};
 use log::{error, info};
-use ntex::http::header;
 use ntex::http::header::{HeaderName, HeaderValue};
 use ntex::service::{Middleware, Service, ServiceCtx};
 use ntex::web::{Error, ErrorRenderer, HttpResponse, WebRequest, WebResponse};
@@ -31,7 +30,8 @@ where
 {
     type Response = WebResponse;
     type Error = Error;
-    type Future<'f> = Either<ServiceCall<'f, S, WebRequest<Err>>, Ready<Result<Self::Response, Self::Error>>> where Self: 'f, Err: 'f;
+    type Future<'f> = Either<ServiceCall<'f, S, WebRequest<Err>>,
+        Ready<Result<Self::Response, Self::Error>>> where Self: 'f, Err: 'f;
 
     ntex::forward_poll_ready!(service);
     ntex::forward_poll_shutdown!(service);

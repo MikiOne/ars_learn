@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 ntex = { version = "0.7.8", features = ["tokio"] }
+ntex-bytes = "0.1.21"
 dotenvy = "0.15"
 anyhow = { version = "1.0.75", features = [] }
 serde = { version = "1.0.192", features = ["derive"] }
@@ -25,3 +26,4 @@ jsonwebtoken = "9.1.0"
 thiserror = "1.0.50"
 config = "0.13.3"
 serde_derive = "1.0.192"
+#pin-project = "1.1.3"

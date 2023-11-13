@@ -6,6 +6,7 @@ use ntex::web::{middleware, App, HttpServer};
 use web_a::common::db_mg;
 use web_a::common::db_mg::DbPool;
 use web_a::common::settings::Settings;
+use web_a::middleware::json_result;
 use web_a::user::user_handler;
 
 #[ntex::main]
@@ -28,6 +29,8 @@ async fn main() -> std::io::Result<()> {
             .state(pool.clone())
             .wrap(middleware::Logger::default())
             // .wrap(auth_filter::JwtFilter)
+            .wrap(json_result::RespData)
+            // .wrap(resp_data::ResponseData)
             .configure(user_handler::config)
         // .service((user::login, user::logout))
     })
