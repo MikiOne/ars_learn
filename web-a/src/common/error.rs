@@ -1,25 +1,24 @@
+use crate::common::biz_code::BizCode;
 use ntex::http::StatusCode;
 use ntex::web::{HttpRequest, HttpResponse, WebResponseError};
 use thiserror::Error;
-
-use crate::auth::error::AuthError;
 
 #[derive(Debug, Error)]
 pub enum WebAppError {
     #[error("Request failed: {0:?}")]
     Custom(#[from] anyhow::Error),
 
+    #[error("Request failed: {0:?}")]
+    AuthError(BizCode),
+
     #[error("Request failed: {0}")]
     DieselError(#[from] diesel::result::Error),
-
-    #[error("Authorization failed: {0:?}")]
-    AuthError(#[from] AuthError),
 }
 
 impl WebResponseError for WebAppError {
     fn status_code(&self) -> StatusCode {
         match *self {
-            WebAppError::AuthError(_) => StatusCode::UNAUTHORIZED,
+            // WebAppError::AuthError(_) => StatusCode::UNAUTHORIZED,
             WebAppError::Custom(_) => StatusCode::INTERNAL_SERVER_ERROR,
             _ => StatusCode::INTERNAL_SERVER_ERROR,
         }

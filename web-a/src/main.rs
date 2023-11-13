@@ -6,7 +6,7 @@ use ntex::web::{middleware, App, HttpServer};
 use web_a::common::db_mg;
 use web_a::common::db_mg::DbPool;
 use web_a::common::settings::Settings;
-use web_a::middleware::json_result;
+use web_a::middleware::auth_filter;
 use web_a::user::user_handler;
 
 #[ntex::main]

@@ -7,6 +7,7 @@ use ntex::ServiceCall;
 use serde_json::json;
 
 use crate::auth::jwt_handler;
+use crate::common::biz_res::RespData;
 use crate::common::consts::JWT_USER;
 
 pub struct JwtFilter;
@@ -37,7 +38,7 @@ where
     ntex::forward_poll_shutdown!(service);
 
     fn call<'a>(&'a self, mut req: WebRequest<Err>, ctx: ServiceCtx<'a, Self>) -> Self::Future<'a> {
-        if req.path() == "/user/login" {
+        if req.path() == "/api/user/login" || req.path() == "/api/user/logout" {
             return Either::Left(ctx.call(&self.service, req));
         }
 
@@ -54,13 +55,8 @@ where
             }
             Err(err) => {
                 error!("auth filter, error: {:?}", &err);
-                let err_str = err.to_string();
-                let json = json!({"code": "0004","msg": err_str});
-                Either::Right(future::ok(
-                    req.into_response(
-                        HttpResponse::Ok().content_type("application/json").body(json),
-                    ),
-                ))
+                let resp = RespData::with_biz_code(err.biz_code);
+                Either::Right(future::ok(req.into_response(resp)))
             }
         };
     }

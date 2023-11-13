@@ -8,7 +8,7 @@ pub enum Role {
 }
 
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
-pub struct BaseUser {
+pub struct SlimUser {
     pub uid: String,
 }
 

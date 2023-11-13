@@ -1,14 +1,14 @@
-use std::num::NonZeroU32;
+use derive_more::Display;
 
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct BizCode(NonZeroU32);
+#[derive(Debug, Clone, Copy, Display, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct BizCode(&'static str);
 
 impl BizCode {
-    pub fn code(&self) -> u32 {
-        self.0.get()
+    pub fn code(&self) -> &'static str {
+        self.0
     }
 
-    pub fn desc(&self) -> Option<&'static str> {
+    pub fn reason(&self) -> Option<&'static str> {
         canonical_reason(self.code())
     }
 }
@@ -23,12 +23,12 @@ macro_rules! biz_codes {
         impl BizCode {
         $(
             $(#[$docs])*
-            pub const $konst: BizCode = BizCode(unsafe { NonZeroU32::new_unchecked($num) });
+            pub const $konst: BizCode = BizCode($num);
         )+
 
         }
 
-        fn canonical_reason(num: u32) -> Option<&'static str> {
+        fn canonical_reason(num: &'static str) -> Option<&'static str> {
             match num {
                 $(
                 $num => Some($phrase),
@@ -40,6 +40,16 @@ macro_rules! biz_codes {
 }
 
 biz_codes! {
-    (000001, SUCCESS, "Success");
-    (000002, FAILURE, "Failure");
+    ("000000", SUCCESS, "Success");
+    ("000001", SYSTEM_ERROR, "System error");
+    ("AU0001", WRONG_CREDENTIALS, "wrong credentials");
+    ("AU0002", JWT_INVALID, "jwt token not valid");
+    ("AU0003", JWT_CREATION_ERR, "jwt token creation error");
+    ("AU0004", LOGIN_TIMEOUT, "Login timeout");
+    ("AU0005", INVALID_AUTH_HEADER, "invalid auth header");
+    ("AU0006", NO_PERMISSION, "no permission");
+    ("AU0007", LOGOUT_SUCCESS, "Logout success");
+    ("DB0001", DATABASE_ERROR, "Database error");
+    ("ORM001", DIESEL_ERROR, "Diesel error");
+    ("UR0001", USER_NOT_FOUND, "User not found");
 }

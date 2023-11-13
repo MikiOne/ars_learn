@@ -1,38 +1,38 @@
-use log::error;
+use futures::future::err;
+use log::{error, info};
 use ntex::web;
 use ntex::web::types::{Json, State};
 use ntex::web::{HttpResponse, Responder, ServiceConfig};
 use serde_json::json;
 
-use crate::common::api_res::RespData;
+use crate::common::biz_code::BizCode;
+use crate::common::biz_res::RespData;
 use crate::common::db_mg::{self, DbPool, PgConn};
+use crate::middleware::auth_handler::LoggedUser;
 use crate::user::user_models::{NewUser, User};
 use crate::user::user_repository;
 
 /// 用户WEB api入口
 pub fn config(cfg: &mut ServiceConfig) {
-    cfg.service(web::scope("/api/user").service((get_user, create)));
+    cfg.service(web::scope("/api/user").service((get_user, create, logout)));
 }
 
 #[web::get("/info/{uid}")]
-pub async fn get_user(
-    pool: State<DbPool>,
-    uid: web::types::Path<i32>,
-) -> Result<HttpResponse, web::Error> {
+pub async fn get_user(pool: State<DbPool>, uid: web::types::Path<i32>) -> HttpResponse {
     let user_id = uid.into_inner();
     let mut conn: PgConn = db_mg::get_conn(pool);
 
-    let res_user = |opt_user: Option<User>| match opt_user {
-        Some(user) => RespData::success(user),
-        None => {
-            let not_found = format!("No user found with id: {}", user_id);
-            error!("{}", &not_found);
-            RespData::failure(not_found)
-        }
-    };
+    // let res_user = |opt_user: Option<User>| match opt_user {
+    //     Some(user) => RespData::success(user),
+    //     None => {
+    //         let not_found = format!("No user found with id: {}", user_id);
+    //         error!("{}", &not_found);
+    //         RespData::failure(not_found)
+    //     }
+    // };
 
     match web::block(move || user_repository::get_by_id(user_id, &mut conn)).await {
-        Ok(opt_user) => res_user(opt_user),
+        Ok(user) => RespData::success(user),
         Err(err) => RespData::with_blocking_err(err),
     }
 }
@@ -85,9 +85,8 @@ pub async fn register(
 //     }
 // }
 
-// #[web::get("/user/logout")]
-// async fn logout(user: LoggedUser) -> HttpResponse {
-//     info!(">>>>>>>>>>>>>LoggedUser: {:?}", user);
-//     let json = json!({"code": "000","msg": "成功登出"});
-//     HttpResponse::Ok().content_type("application/json").body(json)
-// }
+#[web::get("/logout")]
+async fn logout(user: LoggedUser) -> HttpResponse {
+    info!(">>>>>>>>>>>>>LoggedUser: {:?}", user);
+    RespData::with_biz_code(BizCode::LOGIN_TIMEOUT)
+}
