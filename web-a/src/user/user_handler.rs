@@ -5,8 +5,8 @@ use ntex::web::types::{Json, State};
 use ntex::web::{HttpResponse, Responder, ServiceConfig};
 use serde_json::json;
 
+use crate::common::bis_resp::RespData;
 use crate::common::biz_code::BizCode;
-use crate::common::biz_res::RespData;
 use crate::common::db_mg::{self, DbPool, PgConn};
 use crate::middleware::auth_handler::LoggedUser;
 use crate::user::user_models::{NewUser, User};

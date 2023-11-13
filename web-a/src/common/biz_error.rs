@@ -3,8 +3,8 @@ use ntex::http::StatusCode;
 use ntex::web::{HttpRequest, HttpResponse, WebResponseError};
 use std::fmt::{Debug, Display, Formatter};
 
+use crate::common::bis_resp::RespData;
 use crate::common::biz_code::BizCode;
-use crate::common::biz_res::RespData;
 
 // #[derive(Debug, Copy, Clone, Display)]
 // pub struct BizError(pub BizCode);
@@ -44,6 +44,10 @@ impl BizError {
     // pub fn with_err(biz_code: BizCode, err: Box<dyn std::error::Error>) -> Self {
     //     BizError { biz_code, err_str: Some(format!("{}", err)) }
     // }
+
+    pub fn code_reason(&self) -> String {
+        self.biz_code.code_reason()
+    }
 }
 
 impl Display for BizError {
@@ -54,7 +58,7 @@ impl Display for BizError {
 
 impl Debug for BizError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}: {}", self.biz_code.reason().unwrap(), self.err_str)
+        write!(f, "{}: {}", self.code_reason(), self.err_str)
     }
 }
 

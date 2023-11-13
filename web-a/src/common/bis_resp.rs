@@ -4,7 +4,7 @@ use ntex::web::HttpResponse;
 use serde_derive::Serialize;
 
 use crate::common::biz_code::BizCode;
-use crate::common::biz_err::BizError;
+use crate::common::biz_error::BizError;
 
 pub type BizResult<T> = Result<T, BizError>;
 
@@ -50,16 +50,6 @@ impl RespData<()> {
             RespData { code: biz_error.biz_code.to_string(), msg: biz_error.to_string(), data: {} };
         HttpResponse::Ok().json(&resp_data)
     }
-
-    // pub fn failure(err: String) -> HttpResponse {
-    //     let res_data = RespData { code: "000030".to_string(), msg: err, data: () };
-    //     HttpResponse::NotFound().json(&res_data)
-    // }
-
-    // pub fn with_err(err: WebAppError) -> Result<HttpResponse, web::Error> {
-    //     let res_data = RespData { code: "000030".to_string(), msg: err.to_string(), data: () };
-    //     Ok(HttpResponse::build(err.status_code()).json(&res_data))
-    // }
 
     pub fn with_blocking_err(blocking_err: BlockingError<BizError>) -> HttpResponse {
         match blocking_err {

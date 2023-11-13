@@ -7,7 +7,7 @@ use ntex::ServiceCall;
 use serde_json::json;
 
 use crate::auth::jwt_handler;
-use crate::common::biz_res::RespData;
+use crate::common::bis_resp::RespData;
 use crate::common::consts::JWT_USER;
 
 pub struct JwtFilter;

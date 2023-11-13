@@ -11,6 +11,10 @@ impl BizCode {
     pub fn reason(&self) -> Option<&'static str> {
         canonical_reason(self.code())
     }
+
+    pub fn code_reason(&self) -> String {
+        format!("{}: {}", self.code(), self.reason().unwrap())
+    }
 }
 
 macro_rules! biz_codes {
