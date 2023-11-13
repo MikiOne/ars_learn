@@ -4,8 +4,9 @@ use ntex::web::types::{Json, State};
 use ntex::web::{HttpResponse, Responder, ServiceConfig};
 use serde_json::json;
 
+use crate::common::api_res::RespData;
 use crate::common::db_mg::{self, DbPool, PgConn};
-use crate::user::user_models::NewUser;
+use crate::user::user_models::{NewUser, User};
 use crate::user::user_repository;
 
 /// 用户WEB api入口
@@ -19,17 +20,20 @@ pub async fn get_user(
     uid: web::types::Path<i32>,
 ) -> Result<HttpResponse, web::Error> {
     let user_id = uid.into_inner();
-
     let mut conn: PgConn = db_mg::get_conn(pool);
-    let user = web::block(move || user_repository::get_by_id(user_id, &mut conn)).await?;
 
-    if let Some(user_info) = user {
-        Ok(HttpResponse::Ok().json(&user_info))
-    } else {
-        let not_found = format!("No user found with id: {}", user_id);
-        error!("{}", &not_found);
-        let res = HttpResponse::NotFound().body(not_found);
-        Ok(res)
+    let res_user = |opt_user: Option<User>| match opt_user {
+        Some(user) => RespData::success(user),
+        None => {
+            let not_found = format!("No user found with id: {}", user_id);
+            error!("{}", &not_found);
+            RespData::failure(not_found)
+        }
+    };
+
+    match web::block(move || user_repository::get_by_id(user_id, &mut conn)).await {
+        Ok(opt_user) => res_user(opt_user),
+        Err(err) => RespData::with_blocking_err(err),
     }
 }
 

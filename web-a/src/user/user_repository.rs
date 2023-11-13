@@ -12,7 +12,11 @@ pub fn get_by_id(
     conn: &mut PgConnection,
 ) -> Result<Option<user_models::User>, WebAppError> {
     use crate::schemas::wa_users::dsl::*;
-    Ok(wa_users.find(user_id).first::<user_models::User>(conn).optional()?)
+    if user_id != 1 {
+        Err(WebAppError::DieselError(diesel::result::Error::NotFound))
+    } else {
+        Ok(wa_users.find(user_id).first::<user_models::User>(conn).optional()?)
+    }
 }
 
 pub fn save_user(new_user: NewUser, conn: &mut PgConnection) -> Result<SimpleUser, WebAppError> {
