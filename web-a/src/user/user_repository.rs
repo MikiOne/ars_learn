@@ -1,9 +1,9 @@
 use diesel::{PgConnection, QueryDsl, RunQueryDsl, SelectableHelper};
 use log::error;
 
-use crate::common::bis_resp::BizResult;
 use crate::common::biz_code::BizCode;
 use crate::common::biz_error::BizError;
+use crate::common::biz_resp::BizResult;
 use crate::user::user_models::{NewUser, SimpleUser, User};
 
 pub fn get_by_id(user_id: i32, conn: &mut PgConnection) -> BizResult<User> {

@@ -28,7 +28,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .state(pool.clone())
             .wrap(middleware::Logger::default())
-            .wrap(auth_filter::JwtFilter)
+            // .wrap(auth_filter::JwtFilter)
             // .wrap(json_result::RespData)
             // .wrap(resp_data::ResponseData)
             .configure(user_handler::config)

@@ -3,8 +3,8 @@ use ntex::http::StatusCode;
 use ntex::web::{HttpRequest, HttpResponse, WebResponseError};
 use std::fmt::{Debug, Display, Formatter};
 
-use crate::common::bis_resp::RespData;
 use crate::common::biz_code::BizCode;
+use crate::common::biz_resp::RespData;
 
 // #[derive(Debug, Copy, Clone, Display)]
 // pub struct BizError(pub BizCode);

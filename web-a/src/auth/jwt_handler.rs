@@ -6,9 +6,9 @@ use ntex::http::header::AUTHORIZATION;
 use ntex::http::HeaderMap;
 
 use crate::auth::models::{Claims, Role, SlimUser, TokenInfo};
-use crate::common::bis_resp::BizResult;
 use crate::common::biz_code::BizCode;
 use crate::common::biz_error::BizError;
+use crate::common::biz_resp::BizResult;
 
 const BEARER: &str = "Bearer ";
 const JWT_SECRET: &[u8] = b"secret mi";
