@@ -10,7 +10,8 @@ members = [
     "web-a",
     "web-socket",
     "ntex-yew",
-    "rayon-demo"
+    "rayon-demo",
+    "yew-demo"
 ]
 
 # [[bin]]
