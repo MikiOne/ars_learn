@@ -9,6 +9,7 @@ edition = "2021"
 members = [
     "axum-web-a",
     "web-a",
+    "web-diesel-async",
     "web-socket",
     "ntex-yew",
     "crossbeam-demo",

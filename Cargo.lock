@@ -3484,6 +3484,33 @@ dependencies = [
 ]
 
 [[package]]
+name = "web-diesel-async"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "bb8",
+ "chrono",
+ "config",
+ "derive_more",
+ "diesel",
+ "diesel-async",
+ "dotenv",
+ "dotenvy",
+ "env_logger",
+ "futures",
+ "jsonwebtoken",
+ "log",
+ "ntex",
+ "ntex-bytes",
+ "ntex-files",
+ "r2d2",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "thiserror",
+]
+
+[[package]]
 name = "web-sys"
 version = "0.3.65"
 source = "registry+https://github.com/rust-lang/crates.io-index"
