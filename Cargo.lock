@@ -1931,6 +1931,58 @@ dependencies = [
 ]
 
 [[package]]
+name = "ntex-web-a"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "config",
+ "derive_more",
+ "diesel",
+ "dotenv",
+ "dotenvy",
+ "env_logger",
+ "futures",
+ "jsonwebtoken",
+ "log",
+ "ntex",
+ "ntex-bytes",
+ "ntex-files",
+ "r2d2",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "thiserror",
+]
+
+[[package]]
+name = "ntex-web-diesel-async"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "bb8",
+ "chrono",
+ "config",
+ "derive_more",
+ "diesel",
+ "diesel-async",
+ "dotenv",
+ "dotenvy",
+ "env_logger",
+ "futures",
+ "jsonwebtoken",
+ "log",
+ "ntex",
+ "ntex-bytes",
+ "ntex-files",
+ "r2d2",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "thiserror",
+]
+
+[[package]]
 name = "ntex-yew"
 version = "0.1.0"
 dependencies = [
@@ -3457,58 +3509,6 @@ name = "wasm-bindgen-shared"
 version = "0.2.88"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0d046c5d029ba91a1ed14da14dca44b68bf2f124cfbaf741c54151fdb3e0750b"
-
-[[package]]
-name = "web-a"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "chrono",
- "config",
- "derive_more",
- "diesel",
- "dotenv",
- "dotenvy",
- "env_logger",
- "futures",
- "jsonwebtoken",
- "log",
- "ntex",
- "ntex-bytes",
- "ntex-files",
- "r2d2",
- "serde",
- "serde_derive",
- "serde_json",
- "thiserror",
-]
-
-[[package]]
-name = "web-diesel-async"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "bb8",
- "chrono",
- "config",
- "derive_more",
- "diesel",
- "diesel-async",
- "dotenv",
- "dotenvy",
- "env_logger",
- "futures",
- "jsonwebtoken",
- "log",
- "ntex",
- "ntex-bytes",
- "ntex-files",
- "r2d2",
- "serde",
- "serde_derive",
- "serde_json",
- "thiserror",
-]
 
 [[package]]
 name = "web-sys"

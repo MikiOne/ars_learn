@@ -8,8 +8,8 @@ edition = "2021"
 [workspace]
 members = [
     "axum-web-a",
-    "web-a",
-    "web-diesel-async",
+    "ntex-web-a",
+    "ntex-web-diesel-async",
     "web-socket",
     "ntex-yew",
     "crossbeam-demo",
