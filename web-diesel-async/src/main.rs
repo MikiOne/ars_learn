@@ -12,12 +12,14 @@ use web_diesel_async::user::user_handler;
 #[ntex::main]
 async fn main() -> std::io::Result<()> {
     let config = Settings::new().expect("读取配置文件出错");
-
     env::set_var("RUST_BACKTRACE", "1");
-    // env::set_var("RUST_LOG", "info, ntex=info,diesel=debug");
+
     if config.is_debug() {
         env::set_var("RUST_LOG", "debug");
+    } else {
+        env::set_var("RUST_LOG", "info, ntex=info,diesel=debug");
     }
+
     env_logger::init();
     let pool: DbPool = db_mg::init_pool(config).await;
 
