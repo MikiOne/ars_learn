@@ -3,11 +3,11 @@ use std::env;
 use log::info;
 use ntex::web::{middleware, App, HttpServer};
 
-use web_diesel_async::common::db_mg;
-use web_diesel_async::common::db_mg::DbPool;
-use web_diesel_async::common::settings::Settings;
-use web_diesel_async::middleware::auth_filter;
-use web_diesel_async::user::user_handler;
+use ntex_web_diesel_async::common::db_mg;
+use ntex_web_diesel_async::common::db_mg::DbPool;
+use ntex_web_diesel_async::common::settings::Settings;
+use ntex_web_diesel_async::middleware::auth_filter;
+use ntex_web_diesel_async::user::user_handler;
 
 #[ntex::main]
 async fn main() -> std::io::Result<()> {

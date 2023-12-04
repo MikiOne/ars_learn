@@ -5,12 +5,12 @@
 // use log::{error, info};
 // use ntex::web::{middleware, App, HttpServer};
 //
-// use web_a::common::settings::Settings;
-// use web_a::common::{ConnMng, DbPool};
-// use web_a::dict::controller;
-// use web_a::middleware::auth_filter;
-// use web_a::user;
-// use web_a::user::user_controller;
+// use ntex_web_a::common::settings::Settings;
+// use ntex_web_a::common::{ConnMng, DbPool};
+// use ntex_web_a::dict::controller;
+// use ntex_web_a::middleware::auth_filter;
+// use ntex_web_a::user;
+// use ntex_web_a::user::user_controller;
 //
 // // #[ntex::main]
 // async fn main_bak() -> std::io::Result<()> {
