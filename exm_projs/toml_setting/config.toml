@@ -1,0 +1,7 @@
+[database]
+url = "tcp://mysql:123456@localhost/test"
+
+[log]
+debug = true
+debug_sql = false
+log_root = "/tmp"

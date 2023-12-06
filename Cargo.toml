@@ -15,7 +15,8 @@ members = [
     "ntex-yew",
     "crossbeam-demo",
     "rayon-demo",
-    "yew-demo"
+    "yew-demo",
+    "exm_projs/toml_setting"
 ]
 
 # [[bin]]
