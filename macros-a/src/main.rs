@@ -1,3 +1,8 @@
+use macros_a::HelloMacro;
+
+#[derive(HelloMacro)]
+struct Pancakes;
+
 fn main() {
-    println!("Hello, world!");
+    Pancakes::hello_macro();
 }
