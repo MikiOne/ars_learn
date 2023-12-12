@@ -1566,14 +1566,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "macros-a"
-version = "0.1.0"
-dependencies = [
- "quote",
- "syn 2.0.40",
-]
-
-[[package]]
 name = "matchers"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

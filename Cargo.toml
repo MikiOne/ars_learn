@@ -7,7 +7,6 @@ edition = "2021"
 
 [workspace]
 members = [
-    "macros-a",
     "axum-web-a",
     "ntex-web-a",
     "ntex-web-diesel-async",
