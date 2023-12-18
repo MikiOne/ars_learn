@@ -12,6 +12,7 @@ fn sum(input: &[i32]) -> i32 {
     input.iter().map(|&i| i * i).sum()
 }
 
+/// 参考：https://mp.weixin.qq.com/s/rKURimh_Tp-C2krvbLdhZw
 fn main() {
     let start = Instant::now();
     let mut data = Vec::new();
