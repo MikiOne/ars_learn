@@ -57,7 +57,7 @@ pub fn my_main(attr: TokenStream, item: TokenStream) -> TokenStream {
 
     // 替换掉我们自己的代码
     // 输出一条语句，输出的内容是属性定义的值
-    let modified_item = format!("fn main() {{ print!(\"Hello, \"); println!({}); }}",value);
+    let modified_item = format!("fn main() {{ println!(\"Hello, \"); println!({}); }}",value);
     println!("modified_item: {:#?}", modified_item);
 
     // 返回我们自己的代码

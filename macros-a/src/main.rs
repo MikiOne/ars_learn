@@ -5,12 +5,6 @@ use procedural_macros::{CustomDebug, HelloMacro, my_main, test_macro};
 
 
 
-// #[my_main("Rust_main")]
-// fn main() {
-//     Pancakes::hello_macro();
-//     // test_macro_test();
-// }
-
 /// 执行cargo build后，在控制台输出如下
 ///
 /// 参数 attr 就是属性宏 #[test_macro(name = "zhangsan", age = 18)] 的分解：
@@ -23,16 +17,29 @@ fn test_macro_test() {
     println!("Hello, World!");
 }
 
+
+// my_main main
+// #[my_main("Rust_main")]
+// fn main() {
+//     // Pancakes::hello_macro();
+//     test_macro_test();
+// }
+
 #[derive(CustomDebug)]
 struct MyStruct {
     field1: i32,
     field2: String,
 }
 
-fn main() {
+fn custom_debug() {
     let my_struct = MyStruct {
         field1: 42,
         field2: "Hello, world!".into(),
     };
     println!("{:#?}", my_struct);
+}
+
+// custom_debug main
+fn main() {
+    custom_debug();
 }
