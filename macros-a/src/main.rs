@@ -1,3 +1,4 @@
+//! 参考文档：https://mp.weixin.qq.com/s/IN29KYe3w8HOIGWK26ta6w
 use procedural_macros::{CustomDebug, HelloMacro, my_main, test_macro};
 
 // #[derive(HelloMacro)]
