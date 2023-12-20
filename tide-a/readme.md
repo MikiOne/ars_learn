@@ -35,8 +35,14 @@ let Animal { name, legs } = req.body_json().await?;
 Ok(format!("Hello, {}! I've put in an order for {} shoes", name, legs).into())
 }
 ```
-$ curl localhost:8080/orders/shoes -d '{ "name": "Chashu", "legs": 4 }'
-Hello, Chashu! I've put in an order for 4 shoes
-$ curl localhost:8080/orders/shoes -d '{ "name": "Mary Millipede", "legs": 750 }'
-Hello, Mary Millipede! I've put in an order for 750 shoes
+```shell
+curl -X POST -H "Content-Type: application/json" -d '{"name": "zimu", "legs": 12 }' http://localhost:8080/orders/shoes
+# result: Hello, zimu! I've put in an order for 12 shoes
+
+curl localhost:8080/orders/shoes -d '{ "name": "Chashu", "legs": 4 }'
+# result: Hello, Chashu! I've put in an order for 4 shoes
+
+curl localhost:8080/orders/shoes -d '{ "name": "Mary Millipede", "legs": 750 }'
+# result: Hello, Mary Millipede! I've put in an order for 750 shoes
+```
 See more examples in the examples directory.
