@@ -1,4 +1,7 @@
 //! - github: https://github.com/libpnet/libpnet
+//!
+//! Cross-platform, low level networking using the Rust programming language.
+//!
 use pnet::{datalink::{self, Channel}, packet::ethernet::EthernetPacket};
 use pnet::packet::{FromPacket, Packet};
 
