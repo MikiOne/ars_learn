@@ -16,7 +16,9 @@ members = [
     "rayon-demo",
     "yew-demo",
     "exm_projs/toml_setting"
-    , "tide-a", "governor-demo", "actix-web-a", "insta-a"]
+    , "tide-a", "governor-demo", "actix-web-a", "insta-a",
+    "pnet-demo"
+]
 
 # [[bin]]
 # name = "ws-server"
