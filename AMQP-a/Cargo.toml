@@ -1,0 +1,13 @@
+[package]
+name = "AMQP-a"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+lapin = "2.3.1"
+futures-lite = "2.1.0"
+async-global-executor = "2.4.1"
+tracing = "0.1.40"
+tracing-subscriber = "0.3.18"

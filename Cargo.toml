@@ -21,6 +21,7 @@ members = [
     "async-log-watch-a",
     "kafka-a",
     "redis-a",
+    "AMQP-a",
 ]
 
 # [[bin]]
