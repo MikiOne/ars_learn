@@ -19,7 +19,8 @@ members = [
     , "tide-a", "governor-demo", "actix-web-a", "insta-a",
     "pnet-demo",
     "async-log-watch-a",
-    "kafka-a"
+    "kafka-a",
+    "redis-a",
 ]
 
 # [[bin]]
