@@ -1,0 +1,27 @@
+[package]
+name = "kafka-a"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tokio = { version = "1.35.1", features = ["rt", "rt-multi-thread", "macros", "net"] }
+config = "0.13.3"
+anyhow = { version = "1.0.75", features = [] }
+serde = { version = "1.0.192", features = ["derive"] }
+serde_json = "1.0.108"
+serde_derive = "1.0.192"
+#futures = "0.3.29"
+#derive_more = "0.99.17"
+env_logger = "0.10.0"
+log = "0.4"
+rdkafka = { version = "0.36.0", features = ["cmake-build"] }
+
+
+[dev-dependencies]
+tracing-subscriber = "0.3.18"
+kafka = "0.9"
+futures = { version = "0.3.30", features = [] }
+rand = "0.8.5"
+clap = "4.4.11"
