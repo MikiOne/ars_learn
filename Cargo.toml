@@ -22,6 +22,7 @@ members = [
     "kafka-a",
     "redis-a",
     "AMQP-a",
+    "DTT-a",
 ]
 
 # [[bin]]
