@@ -6,6 +6,17 @@ use once_cell::sync::OnceCell;
 
 static GLOBAL_ENV: OnceCell<Env> = OnceCell::new();
 
+pub fn env() -> impl FnOnce() -> Env {
+    let env = || {
+        if cfg!(feature = "env-prod") {
+            Env::Prod
+        } else {
+            Env::Dev
+        }
+    };
+    env
+}
+
 #[derive(Debug, strum_macros::Display)]
 pub enum Env {
     #[strum(serialize = "dev")]
@@ -37,4 +48,3 @@ impl Env {
         }
     }
 }
-

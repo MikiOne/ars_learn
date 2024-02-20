@@ -2,26 +2,25 @@
 extern crate log;
 extern crate log4rs;
 
-pub mod log4rs_config;
-
 use std::path::PathBuf;
-use std::thread;
-use log::{error, info};
+
 use log4rs::append::rolling_file::{policy, RollingFileAppender};
-use log4rs::append::rolling_file::policy::compound::CompoundPolicy;
-use log4rs::append::rolling_file::policy::compound::roll::fixed_window::FixedWindowRoller;
-use log4rs::append::rolling_file::policy::compound::trigger::size::SizeTrigger;
-use log4rs::config::{Appender, Config, Root};
-use log4rs::encode::pattern::PatternEncoder;
+use log4rs::config::{Appender, Root};
+use log::info;
 use log::LevelFilter;
-use ntex::web::{middleware, App, HttpServer};
-use rand::distributions::Alphanumeric;
+use ntex::web::{App, HttpServer, middleware};
 use rand::Rng;
+
+use log4rs_a::{Env, env};
+
 use crate::log4rs_config::ConfigLog4rs;
 
+pub mod log4rs_config;
 
 #[ntex::main]
 async fn main() -> std::io::Result<()> {
+    Env::init_env(env());
+
     // let window_roller = FixedWindowRoller::builder().build("./logs/backup{}.gz", 30).unwrap();
     // // 滚动触发阈值设为15MB。
     // let size_trigger = SizeTrigger::new(1 * 1024 * 1024);
