@@ -22,7 +22,7 @@ pub struct ConfigLog4rs(PathBuf);
 impl ConfigLog4rs {
     pub fn new(path_buf: &PathBuf) -> Result<ConfigLog4rs> {
         if let Env::Dev = Env::env()? {
-            Ok(ConfigLog4rs(path_buf.join("Dev")))
+            Ok(ConfigLog4rs(path_buf.join(Env::Dev.to_string())))
         } else {
             Ok(ConfigLog4rs(path_buf.to_owned()))
         }
@@ -86,7 +86,7 @@ impl ConfigLog4rs {
         info!("current env: {:?}", Env::env());
 
         log_panics::init();
-        // Self::test_log_files();
+        Self::test_log_files();
         Ok(())
     }
 
@@ -110,7 +110,7 @@ impl ConfigLog4rs {
                     i,
                     rand::thread_rng()
                         .sample_iter(&Alphanumeric)
-                        .take(7)
+                        .take(170)
                         .map(char::from)
                         .collect::<String>()
                 );
