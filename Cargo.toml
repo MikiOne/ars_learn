@@ -17,7 +17,7 @@ members = [
     "rayon-demo",
     "yew-demo",
     "exm_projs/toml_setting"
-]
+, "async_rust"]
 
 # [[bin]]
 # name = "ws-server"
