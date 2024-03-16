@@ -7,7 +7,6 @@ edition = "2021"
 
 [workspace]
 members = [
-    "macros-a",
     "axum-web-a",
     "ntex-web-a",
     "ntex-web-diesel-async",
@@ -16,8 +15,15 @@ members = [
     "crossbeam-demo",
     "rayon-demo",
     "yew-demo",
-    "exm_projs/toml_setting"
-, "async_rust"]
+    "exm_projs/toml_setting",
+    "tide-a", "governor-demo", "actix-web-a", "insta-a",
+    "pnet-demo",
+    "async-log-watch-a",
+    "kafka-a",
+    "redis-a",
+    "AMQP-a",
+    "DTT-a", "log4rs-a",
+]
 
 # [[bin]]
 # name = "ws-server"

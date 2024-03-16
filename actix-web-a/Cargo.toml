@@ -1,14 +1,10 @@
 [package]
-name = "macros-a"
+name = "actix-web-a"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[workspace]
-members = [
-    "procedural-macros"
-]
-
 [dependencies]
-procedural-macros = {path = "procedural-macros"}
+actix-web = "4.4.0"
+actix-governor = "0.4"
