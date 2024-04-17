@@ -22,7 +22,11 @@ members = [
     "kafka-a",
     "redis-a",
     "AMQP-a",
-    "DTT-a", "log4rs-a", "gui-druid",
+    "DTT-a",
+    "log4rs-a",
+    "pingora-a",
+    "rate-limiter",
+    "gui-druid",
 ]
 
 # [[bin]]
