@@ -15,8 +15,12 @@ members = [
     "crossbeam-demo",
     "rayon-demo",
     "yew-demo",
-    "exm_projs/toml_setting",
-    "tide-a", "governor-demo", "actix-web-a", "insta-a",
+    "exm-ws/toml_setting",
+    "exm-ws/clap-demo",
+    "tide-a",
+    "governor-demo",
+    "actix-web-a",
+    "insta-a",
     "pnet-demo",
     "async-log-watch-a",
     "kafka-a",
@@ -27,6 +31,7 @@ members = [
     "pingora-a",
     "rate-limiter",
     "gui-druid",
+    "tyr-ws/http-cli",
 ]
 
 # [[bin]]
