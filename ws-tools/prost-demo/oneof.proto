@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package oneof;
+
+message Animal {
+    string name = 1;
+    uint32 age = 2;
+    oneof animal_type {
+        Dog dog = 3;
+        Cat cat = 4;
+        Bird bird = 5;
+    }
+}
+message Dog {
+    string breed = 1;
+}
+message Cat {
+    bool has_tail = 1;
+}
+message Bird {
+    uint32 wingspan = 1;
+}

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package extensions;
+
+
+enum AnimalType {
+    DOG = 0;
+    CAT = 1;
+    BIRD = 2;
+}
+message Animal {
+    string name = 1;
+    uint32 age = 2;
+    AnimalType animal_type = 3;
+
+    map<string, bytes> extensions = 1000;
+}
