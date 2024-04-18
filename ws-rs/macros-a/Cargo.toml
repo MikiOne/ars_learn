@@ -11,4 +11,4 @@ members = [
 ]
 
 [dependencies]
-procedural-macros = {path = "procedural-macros"}
+procedural-macros = {path = "procedural-macros" }

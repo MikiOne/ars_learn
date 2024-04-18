@@ -40,7 +40,7 @@ pub struct Setting {
 impl Default for Setting {
     fn default() -> Self {
         let file_path =
-            "/Users/egal/workspace/rust_ws/ars_learn/exm-ws/toml_setting/config.toml";
+            "/Users/egal/workspace/rust_ws/ars_learn/ws-tools/toml_setting/config.toml";
 
         let mut file = match File::open(file_path) {
             Ok(f) => f,

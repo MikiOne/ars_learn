@@ -40,7 +40,7 @@ async fn main() -> std::io::Result<()> {
     // error!("This is an error message!");
     // test_log_files();
 
-    let log_path = PathBuf::from("./logs");
+    let log_path = PathBuf::from("../../../logs");
     ConfigLog4rs::new(&log_path).unwrap().init_config().unwrap();
 
     let bind = "127.0.0.1:8080";
