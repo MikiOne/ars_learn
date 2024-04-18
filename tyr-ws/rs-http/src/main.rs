@@ -7,6 +7,7 @@ use clap_derive::Args;
 use colored::Colorize;
 use mime::Mime;
 use reqwest::{Client, header, Response, Url};
+use serde_json::Value;
 
 
 /// ### run
@@ -14,6 +15,8 @@ use reqwest::{Client, header, Response, Url};
 /// cargo run -- get https://httpbin.org/get
 ///
 /// cargo run -- post https://httpbin.org/post greeting=Hello
+///
+/// cargo run -- jsonp https://mpadminpro.hxdao.cn/mpa/login '{"username": "test", "password": "123456", "code": "0", "uuid": "e6259305aee84347a7644b560ee7a3b9"}'
 /// ### help
 /// cargo run -- --help
 /// ### sub cmd help
@@ -33,6 +36,7 @@ async fn main() -> Result<()> {
     match cli.cmd {
         Commands::Get(ref get) => get.do_get(client).await?,
         Commands::Post(ref post) => post.do_post(client).await?,
+        Commands::Jsonp(ref post_json) => post_json.do_post(client).await?
     }
 
     Ok(())
@@ -52,6 +56,8 @@ enum Commands {
     Get(Get),
     /// Post request
     Post(Post),
+    /// Post request with json
+    Jsonp(PostJson),
 }
 
 #[derive(Args, Debug)]
@@ -69,8 +75,7 @@ fn parse_url(url: &str) -> Result<String> {
 impl Get {
     async fn do_get(&self, client: Client) -> Result<()> {
         let resp = client.get(&self.url).send().await?;
-        println!("Get response: {resp:?}");
-        Ok(())
+        Ok(print_resp(resp).await?)
     }
 }
 
@@ -124,11 +129,37 @@ impl Post {
     }
 }
 
+#[derive(Args, Debug)]
+struct PostJson {
+    /// 请求的网址url
+    // #[arg(short('u'), long)]
+    #[arg(value_parser = parse_url)]
+    url: String,
+    /// "name=zimu"这样格式的参数, 会转换为Post JSON body的类型
+    // #[arg(short('b'), long)]
+    #[arg(value_parser = parse_json)]
+    json: Value,
+}
+
+fn parse_json(s: &str) -> Result<Value> {
+    let val: Value = serde_json::from_str(s)?;
+    Ok(val)
+}
+
+impl PostJson {
+    async fn do_post(&self, client: Client) -> Result<()> {
+        let resp = client.post(&self.url).json(&self.json).send().await?;
+        Ok(print_resp(resp).await?)
+    }
+}
+
+
 // 打印服务器版本号 + 状态码
 fn print_status(resp: &Response) {
     let status = format!("{:?} {}", resp.version(), resp.status()).blue();
     println!("{}\n", status);
 }
+
 // 打印服务器返回的 HTTP header
 fn print_headers(resp: &Response) {
     for (name, value) in resp.headers() {
@@ -165,4 +196,16 @@ fn get_content_type(resp: &Response) -> Option<Mime> {
     resp.headers()
         .get(header::CONTENT_TYPE)
         .map(|v| v.to_str().unwrap().parse().unwrap())
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::parse_json;
+
+    #[test]
+    fn test_parse_json() -> anyhow::Result<()> {
+        let json_str = r#"{"username": "test", "password": "123456", "code": "0", "uuid": "e6259305aee84347a7644b560ee7a3b9"}"#;
+        let json = parse_json(json_str)?;
+        Ok(println!("{json:?}"))
+    }
 }
