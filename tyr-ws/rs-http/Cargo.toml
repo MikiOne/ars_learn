@@ -1,5 +1,5 @@
 [package]
-name = "http-cli"
+name = "rshttp"
 version = "0.1.0"
 edition = "2021"
 
