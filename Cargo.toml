@@ -30,7 +30,7 @@ members = [
     "ws-middleware/pingora-a",
     "ws-middleware/rate-limiter",
     "ws-middleware/gui-druid",
-    "ws-tyr/rs-http",
+    "ws-tyr/rs-http", "ws-tools/syntect-demo",
 ]
 
 # [[bin]]
