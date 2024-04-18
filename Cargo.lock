@@ -1356,6 +1356,8 @@ name = "clap-demo"
 version = "0.1.0"
 dependencies = [
  "clap",
+ "reqwest 0.12.3",
+ "tokio",
 ]
 
 [[package]]
@@ -3277,21 +3279,6 @@ dependencies = [
  "http 1.0.0",
  "http-body 1.0.0",
  "pin-project-lite 0.2.13",
-]
-
-[[package]]
-name = "http-cli"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "clap",
- "clap_derive",
- "clap_lex",
- "colored",
- "jsonxf",
- "mime",
- "reqwest 0.12.3",
- "tokio",
 ]
 
 [[package]]
@@ -5967,6 +5954,21 @@ checksum = "a44ef95cc607e41a7021da5cfb0f357ee0805113af2e9e6c617857c260940db4"
 dependencies = [
  "smartcow",
  "smartstring",
+]
+
+[[package]]
+name = "rshttp"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "clap_derive",
+ "clap_lex",
+ "colored",
+ "jsonxf",
+ "mime",
+ "reqwest 0.12.3",
+ "tokio",
 ]
 
 [[package]]
