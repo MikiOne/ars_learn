@@ -6505,6 +6505,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "rs-future"
+version = "0.1.0"
+
+[[package]]
 name = "rshttp"
 version = "0.1.0"
 dependencies = [

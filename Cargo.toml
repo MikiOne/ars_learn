@@ -35,6 +35,7 @@ members = [
     "ws-tools/prost-demo",
     "ws-tyr/Thumbor",
     "ws-tools/grpc-tonic",
+    "ws-rs/rs-future",
 ]
 
 # [[bin]]
