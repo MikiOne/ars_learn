@@ -34,6 +34,7 @@ members = [
     "ws-tools/syntect-demo",
     "ws-tools/prost-demo",
     "ws-tyr/Thumbor",
+    "ws-tools/grpc-tonic",
 ]
 
 # [[bin]]
