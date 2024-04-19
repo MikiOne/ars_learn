@@ -30,7 +30,10 @@ members = [
     "ws-middleware/pingora-a",
     "ws-middleware/rate-limiter",
     "ws-middleware/gui-druid",
-    "ws-tyr/rs-http", "ws-tools/syntect-demo", "ws-tools/prost-demo",
+    "ws-tyr/rs-http",
+    "ws-tools/syntect-demo",
+    "ws-tools/prost-demo",
+    "ws-tyr/Thumbor",
 ]
 
 # [[bin]]
@@ -39,7 +42,7 @@ members = [
 
 [dependencies]
 tokio = { version = "1.33.0", features = ["full"] }
-config = "0.13.3"
+config = "0.14.0"
 
 
 # build release opt
