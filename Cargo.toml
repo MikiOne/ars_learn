@@ -36,6 +36,7 @@ members = [
     "ws-tyr/Thumbor",
     "ws-tools/grpc-tonic",
     "ws-rs/rs-future",
+    "ws-tyr/course-exam",
 ]
 
 # [[bin]]

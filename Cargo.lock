@@ -1860,6 +1860,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "course-exam"
+version = "0.1.0"
+dependencies = [
+ "regex",
+]
+
+[[package]]
 name = "cpufeatures"
 version = "0.2.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
