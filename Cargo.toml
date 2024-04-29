@@ -24,7 +24,7 @@ members = [
     "ws-middleware/async-log-watch-a",
     "ws-middleware/kafka-a",
     "ws-middleware/redis-a",
-    "ws-middleware/AMQP-a",
+    "ws-middleware/amqp-lapin",
     "ws-middleware/DTT-a",
     "ws-middleware/log4rs-a",
     "ws-middleware/pingora-a",
@@ -36,6 +36,7 @@ members = [
     "ws-tyr/Thumbor",
     "ws-tools/grpc-tonic",
     "ws-rs/rs-future",
+    "ws-middleware/amqp-mobc-lapin",
     "ws-tyr/course-exam",
 ]
 
