@@ -63,3 +63,20 @@ mod tests {
 }
 
 fn main() {}
+
+// 可以正确编译
+pub fn generics_as_return_working(i: u32) -> impl Iterator<Item = u32> {
+    std::iter::once(i)
+}
+
+// 期待泛型类型，却返回一个具体类型
+/// expected type parameter `T`
+///            found struct `std::iter::Once<u32>`
+// pub fn generics_as_return_not_working<T: Iterator<Item = u32>>(i: u32) -> T {
+//     std::iter::once(i)
+// }
+
+// 返回 trait object
+pub fn trait_object_as_return_working(i: u32) -> Box<dyn Iterator<Item = u32>> {
+    Box::new(std::iter::once(i))
+}
