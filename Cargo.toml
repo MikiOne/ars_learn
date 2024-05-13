@@ -22,7 +22,7 @@ members = [
     "ws-middleware/crossbeam-demo",
     "ws-middleware/pnet-demo",
     "ws-middleware/async-log-watch-a",
-    "ws-middleware/kafka-a",
+#    "ws-middleware/kafka-a",
     "ws-middleware/redis-a",
     "ws-middleware/amqp-lapin",
     "ws-middleware/DTT-a",
@@ -38,6 +38,8 @@ members = [
     "ws-rs/rs-future",
     "ws-middleware/amqp-mobc-lapin",
     "ws-tyr/course-exam",
+    "ws-tyr/kv-server",
+    "ws-tools/btc-payment-grpc",
 ]
 
 # [[bin]]
