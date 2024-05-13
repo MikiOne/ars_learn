@@ -1,7 +1,7 @@
 use tonic::{Request, Response, Status};
 use tonic::transport::Server;
 use payments::bitcoin_server::{Bitcoin, BitcoinServer};
-use crate::payments::{BtcPaymentRequest, BtcPaymentResponse};
+use payments::{BtcPaymentRequest, BtcPaymentResponse};
 
 pub mod payments {
     tonic::include_proto!("payments");
