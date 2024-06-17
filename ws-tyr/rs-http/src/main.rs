@@ -7,6 +7,7 @@ use clap_derive::Args;
 use colored::Colorize;
 use mime::Mime;
 use reqwest::{Client, header, Response, Url};
+use reqwest::header::{HeaderMap, HeaderName, HeaderValue};
 use serde_json::Value;
 
 
@@ -23,6 +24,10 @@ use serde_json::Value;
 /// cargo run -- post --help
 ///
 /// cargo run -- get --help
+///
+/// post with header:
+///
+/// cargo run -- post https://httpbin.org/post greeting=Hello -d "Authorization=bearer token" -d "Authorization2=bearer token2"
 #[tokio::main]
 async fn main() -> Result<()> {
     let cli = Cli::parse();
@@ -111,6 +116,10 @@ struct Post {
     // #[arg(short('b'), long)]
     #[arg(value_parser = parse_kv_pair)]
     body: Vec<KvPair>,
+    /// 请求头，如”Authorization=bearer token“
+    #[arg(short('d'), long)]
+    #[arg(value_parser = parse_kv_pair)]
+    header: Vec<KvPair>,
 }
 
 fn parse_kv_pair(body: &str) -> Result<KvPair> {
@@ -119,18 +128,34 @@ fn parse_kv_pair(body: &str) -> Result<KvPair> {
 
 impl Post {
     async fn do_post(&self, client: Client) -> Result<()> {
+        println!("post header vec: {:?}", &self.header);
+
+        let mut headers = HeaderMap::new();
+        for kv in self.header.iter() {
+            let key = HeaderName::from_str(kv.k.as_str())?;
+            let val = HeaderValue::from_str(kv.v.as_str())?;
+            headers.insert(key, val);
+        }
+        println!("Request headers: {:?}", &headers);
+
         let mut body = HashMap::new();
         for kv in self.body.iter() {
             body.insert(&kv.k, &kv.v);
         }
 
-        let resp = client.post(&self.url).json(&body).send().await?;
+        let resp = client
+            .post(&self.url)
+            .headers(headers)
+            .json(&body).send().await?;
         Ok(print_resp(resp).await?)
     }
 }
 
 #[derive(Args, Debug)]
 struct PostJson {
+    /// 请求头，如”Authorization=bearer token“
+    #[arg(value_parser = parse_kv_pair)]
+    header: Vec<KvPair>,
     /// 请求的网址url
     // #[arg(short('u'), long)]
     #[arg(value_parser = parse_url)]
