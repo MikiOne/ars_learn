@@ -28,6 +28,12 @@ use serde_json::Value;
 /// ### post with header:
 ///
 /// cargo run -- post https://httpbin.org/post greeting=Hello -d "Authorization=bearer token" -d "Authorization2=bearer token2"
+///
+/// cargo run -- jsonp -d "Authorization=bearer token" -d "Authorization2=bearer token2" https://mpadminpro.hxdao.cn/mpa/login '{"username": "test", "password": "123456", "code": "0", "uuid": "e6259305aee84347a7644b560ee7a3b9"}'
+///
+/// cargo run -- jsonp -d "saas-domain=adminsaas.dbne.vip" -d "saas-admin-token=dd63b9a1-6134-4ba6-b41f-5c0742933140" http://192.168.101.7:9203/saas-dreamadmin/admin/agent/list '{"-agentUserId": 2, "pageNum": 1, "pageSize": 2}'
+///
+/// (./)rshttp jsonp -d "saas-domain=adminsaas.dbne.vip" -d "saas-admin-token=dd63b9a1-6134-4ba6-b41f-5c0742933140" http://192.168.101.7:9203/saas-dreamadmin/admin/agent/list '{"-agentUserId": 2, "pageNum": 1, "pageSize": 2}'
 #[tokio::main]
 async fn main() -> Result<()> {
     let cli = Cli::parse();
@@ -139,7 +145,6 @@ fn parse_kv_pair(body: &str) -> Result<KvPair> {
 
 impl Post {
     async fn do_post(&self, client: Client) -> Result<()> {
-        println!("post header vec: {:?}", &self.header);
         let hmw: HeaderMapWrapper = (&self.header).try_into()?;
         println!("Request headers: {:?}", &hmw);
 
@@ -177,6 +182,8 @@ fn parse_json(s: &str) -> Result<Value> {
 impl PostJson {
     async fn do_post(&self, client: Client) -> Result<()> {
         let hmw: HeaderMapWrapper = (&self.header).try_into()?;
+        println!("Request headers: {:?}", &hmw);
+
         let resp = client.post(&self.url).headers(hmw.0).json(&self.json).send().await?;
         Ok(print_resp(resp).await?)
     }
