@@ -106,6 +106,22 @@ impl FromStr for KvPair {
     }
 }
 
+#[derive(Debug)]
+struct HeaderMapWrapper(HeaderMap);
+
+impl TryFrom<&Vec<KvPair>> for HeaderMapWrapper {
+    type Error = anyhow::Error;
+    fn try_from(value: &Vec<KvPair>) -> Result<Self, Self::Error> {
+        let mut headers = HeaderMap::new();
+        for kv in value.iter() {
+            let key = HeaderName::from_str(kv.k.as_str())?;
+            let val = HeaderValue::from_str(kv.v.as_str())?;
+            headers.insert(key, val);
+        }
+        Ok(HeaderMapWrapper(headers))
+    }
+}
+
 #[derive(Args, Debug)]
 struct Post {
     /// 请求的网址url
@@ -130,13 +146,15 @@ impl Post {
     async fn do_post(&self, client: Client) -> Result<()> {
         println!("post header vec: {:?}", &self.header);
 
-        let mut headers = HeaderMap::new();
-        for kv in self.header.iter() {
-            let key = HeaderName::from_str(kv.k.as_str())?;
-            let val = HeaderValue::from_str(kv.v.as_str())?;
-            headers.insert(key, val);
-        }
-        println!("Request headers: {:?}", &headers);
+        // let mut headers = HeaderMap::new();
+        // for kv in self.header.iter() {
+        //     let key = HeaderName::from_str(kv.k.as_str())?;
+        //     let val = HeaderValue::from_str(kv.v.as_str())?;
+        //     headers.insert(key, val);
+        // }
+        let hmw: HeaderMapWrapper = (&self.header).try_into()?;
+        // let headers = hmw.0;
+        println!("Request headers: {:?}", &hmw);
 
         let mut body = HashMap::new();
         for kv in self.body.iter() {
@@ -145,7 +163,7 @@ impl Post {
 
         let resp = client
             .post(&self.url)
-            .headers(headers)
+            .headers(hmw.0)
             .json(&body).send().await?;
         Ok(print_resp(resp).await?)
     }
