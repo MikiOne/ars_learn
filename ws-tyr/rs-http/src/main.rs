@@ -71,6 +71,10 @@ struct Get {
     /// 请求的网址url
     #[arg(value_parser = parse_url)]
     url: String,
+    /// 请求头，如”Authorization=bearer token“
+    #[arg(short('d'), long)]
+    #[arg(value_parser = parse_kv_pair)]
+    header: Vec<KvPair>,
 }
 
 fn parse_url(url: &str) -> Result<String> {
@@ -80,7 +84,8 @@ fn parse_url(url: &str) -> Result<String> {
 
 impl Get {
     async fn do_get(&self, client: Client) -> Result<()> {
-        let resp = client.get(&self.url).send().await?;
+        let hmw: HeaderMapWrapper = (&self.header).try_into()?;
+        let resp = client.get(&self.url).headers(hmw.0).send().await?;
         Ok(print_resp(resp).await?)
     }
 }
