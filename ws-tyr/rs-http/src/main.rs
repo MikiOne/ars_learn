@@ -25,18 +25,13 @@ use serde_json::Value;
 ///
 /// cargo run -- get --help
 ///
-/// post with header:
+/// ### post with header:
 ///
 /// cargo run -- post https://httpbin.org/post greeting=Hello -d "Authorization=bearer token" -d "Authorization2=bearer token2"
 #[tokio::main]
 async fn main() -> Result<()> {
     let cli = Cli::parse();
     let client = Client::new();
-
-    // match &cli.subcmd {
-    //     Commands::Get(get) => get.do_get(client).await?,
-    //     Commands::Post(post) => post.do_post(client).await?,
-    // }
 
     match cli.cmd {
         Commands::Get(ref get) => get.do_get(client).await?,
@@ -145,15 +140,7 @@ fn parse_kv_pair(body: &str) -> Result<KvPair> {
 impl Post {
     async fn do_post(&self, client: Client) -> Result<()> {
         println!("post header vec: {:?}", &self.header);
-
-        // let mut headers = HeaderMap::new();
-        // for kv in self.header.iter() {
-        //     let key = HeaderName::from_str(kv.k.as_str())?;
-        //     let val = HeaderValue::from_str(kv.v.as_str())?;
-        //     headers.insert(key, val);
-        // }
         let hmw: HeaderMapWrapper = (&self.header).try_into()?;
-        // let headers = hmw.0;
         println!("Request headers: {:?}", &hmw);
 
         let mut body = HashMap::new();
@@ -161,19 +148,13 @@ impl Post {
             body.insert(&kv.k, &kv.v);
         }
 
-        let resp = client
-            .post(&self.url)
-            .headers(hmw.0)
-            .json(&body).send().await?;
+        let resp = client.post(&self.url).headers(hmw.0).json(&body).send().await?;
         Ok(print_resp(resp).await?)
     }
 }
 
 #[derive(Args, Debug)]
 struct PostJson {
-    /// 请求头，如”Authorization=bearer token“
-    #[arg(value_parser = parse_kv_pair)]
-    header: Vec<KvPair>,
     /// 请求的网址url
     // #[arg(short('u'), long)]
     #[arg(value_parser = parse_url)]
@@ -182,6 +163,10 @@ struct PostJson {
     // #[arg(short('b'), long)]
     #[arg(value_parser = parse_json)]
     json: Value,
+    /// 请求头，如”Authorization=bearer token“
+    #[arg(short('d'), long)]
+    #[arg(value_parser = parse_kv_pair)]
+    header: Vec<KvPair>,
 }
 
 fn parse_json(s: &str) -> Result<Value> {
@@ -191,7 +176,8 @@ fn parse_json(s: &str) -> Result<Value> {
 
 impl PostJson {
     async fn do_post(&self, client: Client) -> Result<()> {
-        let resp = client.post(&self.url).json(&self.json).send().await?;
+        let hmw: HeaderMapWrapper = (&self.header).try_into()?;
+        let resp = client.post(&self.url).headers(hmw.0).json(&self.json).send().await?;
         Ok(print_resp(resp).await?)
     }
 }
