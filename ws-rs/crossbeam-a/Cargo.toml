@@ -7,3 +7,4 @@ edition = "2021"
 crossbeam = "0.8.4"
 strum = "0.26.2"
 strum_macros = "0.26.4"
+tokio = {version = "1.38.0", features = ["full"]}

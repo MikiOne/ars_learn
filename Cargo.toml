@@ -19,7 +19,6 @@ members = [
     "ws-tools/toml_setting",
     "ws-tools/clap-demo",
     "ws-middleware/governor-demo",
-    "ws-middleware/crossbeam-demo",
     "ws-middleware/pnet-demo",
     "ws-middleware/async-log-watch-a",
 #    "ws-middleware/kafka-a",
