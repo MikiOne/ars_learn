@@ -1,43 +1,64 @@
-use crossbeam::queue::ArrayQueue;
-use std::thread;
-use std::sync::Arc;
+use std::collections::HashMap;
+use std::sync::{Arc, Mutex};
+use crossbeam::channel;
+use crossbeam::channel::{Receiver, Sender};
+use strum_macros::{Display, EnumString};
 
-// 这是我们的简单任务类型，你可以根据你的需求来修改它
-type Task = Box<dyn FnOnce() + Send + 'static>;
-
-struct Scheduler {
-    queue: Arc<ArrayQueue<Task>>,
+#[derive(Debug, Clone, Hash, Eq, PartialEq, Display, EnumString)]
+enum Event {
+    Default,
+    EventTest,
 }
 
-impl Scheduler {
-    fn new(capacity: usize) -> Self {
-        Scheduler {
-            queue: Arc::new(ArrayQueue::new(capacity)),
+type Payload = Vec<u8>;
+
+trait EventHandler: Send + Sync {
+    fn handle(&self, event: &Event, payload: &Payload);
+}
+
+struct Dispatcher {
+    tx: Sender<(Event, Payload)>,
+    rx: Receiver<(Event, Payload)>,
+    registry: Arc<Mutex<HashMap<Event, Vec<Arc<dyn EventHandler>>>>>,
+}
+
+impl Dispatcher {
+    fn new() -> Self {
+        let (tx, rx) = channel::unbounded();
+        Dispatcher {
+            tx,
+            rx,
+            registry: Arc::new(Mutex::new(HashMap::new())),
         }
     }
 
-    fn spawn(&self, task: Task) {
-        let queue = self.queue.clone();
-        queue.push(task);
+    fn register_handler(&self, event: Event, handler: Arc<dyn EventHandler>) {
+        let mut registry = self.registry.lock().expect("注册表还未初始化");
+        registry.entry(event).or_insert_with(Vec::new).push(handler);
     }
 
-    fn run(&self) {
-        while let Ok(task) = self.queue.pop() {
-            task();
-        }
+    fn trigger_event(&self, event: Event, payload: Payload) {
+        self.tx.send((event, payload)).unwrap()
+    }
+
+    fn start(&self) {
+        let registry = self.registry.clone();
+        let rx = self.rx.clone();
+
+        tokio::spawn(async move {
+            loop {
+                if let Ok((event, payload)) = rx.recv() {
+                    let reg_map = registry.lock().unwrap();
+                    let handlers = reg_map.get(&event).unwrap();
+                    for handler in handlers {
+                        handler.handle(&event, &payload);
+                    }
+                }
+            }
+        });
     }
 }
 
-fn main() {
-    let scheduler = Scheduler::new(100);
 
-    scheduler.spawn(Box::new(|| println!("hello")));
-    scheduler.spawn(Box::new(|| println!("world")));
-
-    let other_scheduler = scheduler.clone();
-    thread::spawn(move || other_scheduler.run());
-
-    scheduler.run();
-
-    thread::sleep(std::time::Duration::from_secs(1));
-}
+#[tokio::main]
+async fn main() {}
