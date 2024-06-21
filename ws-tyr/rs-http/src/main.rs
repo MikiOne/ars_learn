@@ -7,6 +7,7 @@ use clap_derive::Args;
 use colored::Colorize;
 use mime::Mime;
 use reqwest::{Client, header, Response, Url};
+use reqwest::header::{HeaderMap, HeaderName, HeaderValue};
 use serde_json::Value;
 
 
@@ -23,15 +24,20 @@ use serde_json::Value;
 /// cargo run -- post --help
 ///
 /// cargo run -- get --help
+///
+/// ### post with header:
+///
+/// cargo run -- post https://httpbin.org/post greeting=Hello -d "Authorization=bearer token" -d "Authorization2=bearer token2"
+///
+/// cargo run -- jsonp -d "Authorization=bearer token" -d "Authorization2=bearer token2" https://mpadminpro.hxdao.cn/mpa/login '{"username": "test", "password": "123456", "code": "0", "uuid": "e6259305aee84347a7644b560ee7a3b9"}'
+///
+/// cargo run -- jsonp -d "saas-domain=adminsaas.dbne.vip" -d "saas-admin-token=dd63b9a1-6134-4ba6-b41f-5c0742933140" http://192.168.101.7:9203/saas-dreamadmin/admin/agent/list '{"-agentUserId": 2, "pageNum": 1, "pageSize": 2}'
+///
+/// (./)rshttp jsonp -d "saas-domain=adminsaas.dbne.vip" -d "saas-admin-token=dd63b9a1-6134-4ba6-b41f-5c0742933140" http://192.168.101.7:9203/saas-dreamadmin/admin/agent/list '{"-agentUserId": 2, "pageNum": 1, "pageSize": 2}'
 #[tokio::main]
 async fn main() -> Result<()> {
     let cli = Cli::parse();
     let client = Client::new();
-
-    // match &cli.subcmd {
-    //     Commands::Get(get) => get.do_get(client).await?,
-    //     Commands::Post(post) => post.do_post(client).await?,
-    // }
 
     match cli.cmd {
         Commands::Get(ref get) => get.do_get(client).await?,
@@ -65,6 +71,10 @@ struct Get {
     /// 请求的网址url
     #[arg(value_parser = parse_url)]
     url: String,
+    /// 请求头，如”Authorization=bearer token“
+    #[arg(short('d'), long)]
+    #[arg(value_parser = parse_kv_pair)]
+    header: Vec<KvPair>,
 }
 
 fn parse_url(url: &str) -> Result<String> {
@@ -74,7 +84,8 @@ fn parse_url(url: &str) -> Result<String> {
 
 impl Get {
     async fn do_get(&self, client: Client) -> Result<()> {
-        let resp = client.get(&self.url).send().await?;
+        let hmw: HeaderMapWrapper = (&self.header).try_into()?;
+        let resp = client.get(&self.url).headers(hmw.0).send().await?;
         Ok(print_resp(resp).await?)
     }
 }
@@ -101,6 +112,22 @@ impl FromStr for KvPair {
     }
 }
 
+#[derive(Debug)]
+struct HeaderMapWrapper(HeaderMap);
+
+impl TryFrom<&Vec<KvPair>> for HeaderMapWrapper {
+    type Error = anyhow::Error;
+    fn try_from(value: &Vec<KvPair>) -> Result<Self, Self::Error> {
+        let mut headers = HeaderMap::new();
+        for kv in value.iter() {
+            let key = HeaderName::from_str(kv.k.as_str())?;
+            let val = HeaderValue::from_str(kv.v.as_str())?;
+            headers.insert(key, val);
+        }
+        Ok(HeaderMapWrapper(headers))
+    }
+}
+
 #[derive(Args, Debug)]
 struct Post {
     /// 请求的网址url
@@ -111,6 +138,10 @@ struct Post {
     // #[arg(short('b'), long)]
     #[arg(value_parser = parse_kv_pair)]
     body: Vec<KvPair>,
+    /// 请求头，如”Authorization=bearer token“
+    #[arg(short('d'), long)]
+    #[arg(value_parser = parse_kv_pair)]
+    header: Vec<KvPair>,
 }
 
 fn parse_kv_pair(body: &str) -> Result<KvPair> {
@@ -119,12 +150,15 @@ fn parse_kv_pair(body: &str) -> Result<KvPair> {
 
 impl Post {
     async fn do_post(&self, client: Client) -> Result<()> {
+        let hmw: HeaderMapWrapper = (&self.header).try_into()?;
+        // println!("Request headers: {:?}", &hmw);
+
         let mut body = HashMap::new();
         for kv in self.body.iter() {
             body.insert(&kv.k, &kv.v);
         }
 
-        let resp = client.post(&self.url).json(&body).send().await?;
+        let resp = client.post(&self.url).headers(hmw.0).json(&body).send().await?;
         Ok(print_resp(resp).await?)
     }
 }
@@ -139,6 +173,10 @@ struct PostJson {
     // #[arg(short('b'), long)]
     #[arg(value_parser = parse_json)]
     json: Value,
+    /// 请求头，如”Authorization=bearer token“
+    #[arg(short('d'), long)]
+    #[arg(value_parser = parse_kv_pair)]
+    header: Vec<KvPair>,
 }
 
 fn parse_json(s: &str) -> Result<Value> {
@@ -148,7 +186,10 @@ fn parse_json(s: &str) -> Result<Value> {
 
 impl PostJson {
     async fn do_post(&self, client: Client) -> Result<()> {
-        let resp = client.post(&self.url).json(&self.json).send().await?;
+        let hmw: HeaderMapWrapper = (&self.header).try_into()?;
+        // println!("Request headers: {:?}", &hmw);
+
+        let resp = client.post(&self.url).headers(hmw.0).json(&self.json).send().await?;
         Ok(print_resp(resp).await?)
     }
 }
