@@ -37,7 +37,7 @@ members = [
     "ws-tools/grpc-tonic",
     "ws-rs/rs-future",
     "ws-middleware/amqp-mobc-lapin",
-    "ws-tyr/course-exam",
+    "ws-tyr/course-exam", "ws-tools/num_cpu",
 ]
 
 # [[bin]]
