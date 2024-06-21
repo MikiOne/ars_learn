@@ -151,7 +151,7 @@ fn parse_kv_pair(body: &str) -> Result<KvPair> {
 impl Post {
     async fn do_post(&self, client: Client) -> Result<()> {
         let hmw: HeaderMapWrapper = (&self.header).try_into()?;
-        println!("Request headers: {:?}", &hmw);
+        // println!("Request headers: {:?}", &hmw);
 
         let mut body = HashMap::new();
         for kv in self.body.iter() {
@@ -187,7 +187,7 @@ fn parse_json(s: &str) -> Result<Value> {
 impl PostJson {
     async fn do_post(&self, client: Client) -> Result<()> {
         let hmw: HeaderMapWrapper = (&self.header).try_into()?;
-        println!("Request headers: {:?}", &hmw);
+        // println!("Request headers: {:?}", &hmw);
 
         let resp = client.post(&self.url).headers(hmw.0).json(&self.json).send().await?;
         Ok(print_resp(resp).await?)
