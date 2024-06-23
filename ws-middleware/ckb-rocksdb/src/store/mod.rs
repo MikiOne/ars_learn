@@ -4,7 +4,8 @@ pub(crate) use self::rocksdb::RocksdbStore;
 use crate::error::Error;
 use std::path::Path;
 
-type IteratorItem = (Box<[u8]>, Box<[u8]>);
+// type IteratorItem = (Box<[u8]>, Box<[u8]>);
+type IteratorItem = Result<(Box<[u8]>, Box<[u8]>), ::rocksdb::Error>;
 
 pub(crate) enum IteratorDirection {
     Forward,
@@ -25,10 +26,11 @@ pub(crate) trait Store {
 
     fn exists<K: AsRef<[u8]>>(&self, key: K) -> Result<bool, Error>;
 
-    // fn iter<K: AsRef<[u8]>>(
-    //     &self,
-    //     from_key: K,
-    //     direction: IteratorDirection,
+    fn iter<K: AsRef<[u8]>>(
+        &self,
+        from_key: K,
+        direction: IteratorDirection,
+    ) -> Box<dyn Iterator<Item = IteratorItem> + '_>;
     // ) -> Result<Box<dyn Iterator<Item = IteratorItem> + '_>, Error>;
 
     fn batch(&self) -> Result<Self::Batch, Error>;
