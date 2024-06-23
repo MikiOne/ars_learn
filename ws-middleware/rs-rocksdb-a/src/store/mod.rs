@@ -2,6 +2,7 @@ pub mod rocksdb;
 pub mod error;
 
 use std::path::Path;
+use ::rocksdb::{DB, DBIteratorWithThreadMode, IteratorMode, SingleThreaded};
 use crate::store::error::Error;
 
 pub(crate) trait Store {
@@ -19,7 +20,9 @@ pub(crate) trait Store {
 
     fn exists<K: AsRef<[u8]>>(&self, key: K) -> Result<bool, Error>;
 
-    fn batch(&self) -> Self::Batch;
+    fn batch(&self) -> Self::Batch; // 封装 iterator 的方法
+
+    fn iterate(&self, mode: IteratorMode) -> DBIteratorWithThreadMode<DB>;
 }
 
 pub(crate) trait Batch {

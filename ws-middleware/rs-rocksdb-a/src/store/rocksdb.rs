@@ -1,7 +1,7 @@
 use std::path::Path;
 use std::sync::Arc;
 
-use rocksdb::{DB, Options, WriteBatch};
+use rocksdb::{DB, DBIteratorWithThreadMode, IteratorMode, Options, SingleThreaded, WriteBatch};
 
 use crate::store::{Batch, Store};
 use crate::store::error::Error;
@@ -42,6 +42,11 @@ impl Store for RocksdbStore {
             db: Arc::clone(&self.db),
             wb: WriteBatch::default(),
         }
+    }
+
+    // 封装 iterator 的方法
+    fn iterate(&self, mode: IteratorMode) -> DBIteratorWithThreadMode<DB> {
+        self.db.iterator(mode)
     }
 }
 
@@ -118,5 +123,62 @@ mod tests {
         batch.del([0, 0]);
         batch.commit().unwrap();
         assert_eq!(None, store.get([0, 0]).unwrap());
+    }
+
+    #[test]
+    fn iter() {
+        let store = RocksdbStore::new(
+            &RocksdbStore::default_options(),
+            Builder::new().prefix("iter").tempdir().unwrap(),
+        ).unwrap();
+
+        let mut batch = store.batch();
+        batch.put([0, 0, 0], [0, 0, 0]);
+        batch.put([0, 0, 1], [0, 0, 1]);
+        batch.put([1, 0, 0], [1, 0, 0]);
+        batch.put([1, 0, 1], [1, 0, 1]);
+        batch.put([2, 0, 0, 1], [2, 0, 0, 1]);
+        batch.put([2, 0, 1, 1], [2, 0, 1, 1]);
+        batch.put([2, 0, 2, 1], [2, 0, 2, 1]);
+        batch.commit().unwrap();
+
+        let iter = store.iterate(IteratorMode::Start);
+        for item in iter {
+            let (key, value) = item.unwrap();
+            println!("获得键值对: {:?} -> {:?}", key, value);
+        }
+
+        let iter = store.iterate(IteratorMode::End);
+        for item in iter {
+            let (key, value) = item.unwrap();
+            println!("获得键值对: {:?} -> {:?}", key, value);
+        }
+
+        // let mut iter = store.iter([0, 0, 1], IteratorDirection::Forward).unwrap();
+        // assert_eq!(
+        //     Some((vec![0, 0, 1], vec![0, 0, 1])),
+        //     iter.next().map(|i| (i.0.to_vec(), i.1.to_vec()))
+        // );
+        // assert_eq!(
+        //     Some((vec![1, 0, 0], vec![1, 0, 0])),
+        //     iter.next().map(|i| (i.0.to_vec(), i.1.to_vec()))
+        // );
+        //
+        // let mut iter = store.iter([0, 0, 1], IteratorDirection::Reverse).unwrap();
+        // assert_eq!(
+        //     Some((vec![0, 0, 1], vec![0, 0, 1])),
+        //     iter.next().map(|i| (i.0.to_vec(), i.1.to_vec()))
+        // );
+        // assert_eq!(
+        //     Some((vec![0, 0, 0], vec![0, 0, 0])),
+        //     iter.next().map(|i| (i.0.to_vec(), i.1.to_vec()))
+        // );
+        // assert!(iter.next().is_none());
+        //
+        // let mut iter = store.iter([2, 0, 1], IteratorDirection::Reverse).unwrap();
+        // assert_eq!(
+        //     Some((vec![2, 0, 0, 1], vec![2, 0, 0, 1])),
+        //     iter.next().map(|i| (i.0.to_vec(), i.1.to_vec()))
+        // );
     }
 }
