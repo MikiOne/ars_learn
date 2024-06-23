@@ -6668,6 +6668,8 @@ name = "rs-rocksdb-a"
 version = "0.1.0"
 dependencies = [
  "rocksdb",
+ "tempfile",
+ "thiserror",
 ]
 
 [[package]]
