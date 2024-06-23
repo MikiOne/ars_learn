@@ -42,7 +42,9 @@ members = [
     "ws-grpc/btc-payment-grpc",
     "ws-rs/crossbeam-a",
     "ws-net/tokio-stream",
-    "ws-w3b/eth_server", "ws-middleware/rs-rocksdb-a",
+    "ws-w3b/eth_server",
+    "ws-middleware/rs-rocksdb-a",
+    "ws-middleware/ckb-rocksdb",
 ]
 
 # [[bin]]

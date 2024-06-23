@@ -1,6 +1,4 @@
-use crate::database::Database;
-
-mod database;
+use rs_rocksdb_a::database::Database;
 
 //
 // 获取当前的工作目录ø

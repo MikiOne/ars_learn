@@ -1,5 +1,5 @@
 use rocksdb::{Options, DB};
-
+/// https://github.com/haraldng/omnipaxos-rocksdb-tutorial/blob/main/kv_store/src/database.rs
 pub struct Database {
     rocks_db: DB,
 }
