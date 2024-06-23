@@ -1,9 +1,13 @@
+use std::path::Path;
+
+use ::rocksdb::{DB, DBIteratorWithThreadMode, Direction, IteratorMode};
+
+use crate::store::error::Error;
+
 pub mod rocksdb;
 pub mod error;
 
-use std::path::Path;
-use ::rocksdb::{DB, DBIteratorWithThreadMode, IteratorMode, SingleThreaded};
-use crate::store::error::Error;
+type IteratorItem = Result<(Box<[u8]>, Box<[u8]>), ::rocksdb::Error>;
 
 pub(crate) trait Store {
     type Batch: Batch;
@@ -23,6 +27,10 @@ pub(crate) trait Store {
     fn batch(&self) -> Self::Batch; // 封装 iterator 的方法
 
     fn iterate(&self, mode: IteratorMode) -> DBIteratorWithThreadMode<DB>;
+
+    fn iter_from<K: AsRef<[u8]>>(
+        &self, from_key: K, direction: Direction,
+    ) -> Box<dyn Iterator<Item=IteratorItem> + '_>;
 }
 
 pub(crate) trait Batch {

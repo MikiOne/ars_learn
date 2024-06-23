@@ -1,9 +1,9 @@
 use std::path::Path;
 use std::sync::Arc;
 
-use rocksdb::{DB, DBIteratorWithThreadMode, IteratorMode, Options, SingleThreaded, WriteBatch};
+use rocksdb::{DB, DBIteratorWithThreadMode, Direction, IteratorMode, Options, WriteBatch};
 
-use crate::store::{Batch, Store};
+use crate::store::{Batch, IteratorItem, Store};
 use crate::store::error::Error;
 
 #[derive(Clone)]
@@ -48,6 +48,13 @@ impl Store for RocksdbStore {
     fn iterate(&self, mode: IteratorMode) -> DBIteratorWithThreadMode<DB> {
         self.db.iterator(mode)
     }
+
+    fn iter_from<K: AsRef<[u8]>>(
+        &self, from_key: K, direction: Direction,
+    ) -> Box<dyn Iterator<Item=IteratorItem> + '_> {
+        let mode = IteratorMode::From(from_key.as_ref(), direction);
+        Box::new(self.db.iterator(mode)) as Box<_>
+    }
 }
 
 pub(crate) struct RocksdbBatch {
@@ -72,8 +79,60 @@ impl Batch for RocksdbBatch {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use tempfile::Builder;
+
+    use super::*;
+
+    #[test]
+    fn iter_from() {
+        let store = RocksdbStore::new(
+            &RocksdbStore::default_options(),
+            Builder::new().prefix("iter").tempdir().unwrap(),
+        ).unwrap();
+
+        let mut batch = store.batch();
+        batch.put([0, 0, 0], [0, 0, 0]);
+        batch.put([0, 0, 1], [0, 0, 1]);
+        batch.put([1, 0, 0], [1, 0, 0]);
+        batch.put([1, 0, 1], [1, 0, 1]);
+        batch.put([2, 0, 0, 1], [2, 0, 0, 1]);
+        batch.put([2, 0, 1, 1], [2, 0, 1, 1]);
+        batch.put([2, 0, 2, 1], [2, 0, 2, 1]);
+        batch.commit().unwrap();
+
+        let mut iter = store.iter_from([0, 0, 1], Direction::Forward);
+        assert_eq!(
+            Some((vec![0, 0, 1], vec![0, 0, 1])),
+            iter.next().map(|i| {
+                let i = i.unwrap();
+                (i.0.to_vec(), i.1.to_vec())
+            })
+        );
+        assert_eq!(
+            Some((vec![1, 0, 0], vec![1, 0, 0])),
+            iter.next().map(|i| {
+                let i = i.unwrap();
+                (i.0.to_vec(), i.1.to_vec())
+            })
+        );
+
+        // let mut iter = store.iter([0, 0, 1], IteratorDirection::Reverse).unwrap();
+        // assert_eq!(
+        //     Some((vec![0, 0, 1], vec![0, 0, 1])),
+        //     iter.next().map(|i| (i.0.to_vec(), i.1.to_vec()))
+        // );
+        // assert_eq!(
+        //     Some((vec![0, 0, 0], vec![0, 0, 0])),
+        //     iter.next().map(|i| (i.0.to_vec(), i.1.to_vec()))
+        // );
+        // assert!(iter.next().is_none());
+        //
+        // let mut iter = store.iter([2, 0, 1], IteratorDirection::Reverse).unwrap();
+        // assert_eq!(
+        //     Some((vec![2, 0, 0, 1], vec![2, 0, 0, 1])),
+        //     iter.next().map(|i| (i.0.to_vec(), i.1.to_vec()))
+        // );
+    }
 
     #[test]
     fn put_and_get() {
@@ -126,7 +185,7 @@ mod tests {
     }
 
     #[test]
-    fn iter() {
+    fn iterate() {
         let store = RocksdbStore::new(
             &RocksdbStore::default_options(),
             Builder::new().prefix("iter").tempdir().unwrap(),
