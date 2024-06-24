@@ -44,7 +44,7 @@ members = [
     "ws-net/tokio-stream",
     "ws-w3b/eth_server",
     "ws-middleware/rs-rocksdb-a",
-    "ws-middleware/ckb-rocksdb",
+    "ws-middleware/ckb-rocksdb", "ws-w3b/data-store", "ws-w3b/bchain-server",
 ]
 
 # [[bin]]
