@@ -20,6 +20,8 @@ pub(crate) trait Store {
 
     fn default_options() -> Self::Opts;
 
+    fn put<K: AsRef<[u8]>, V: AsRef<[u8]>>(&self, key: K, value: V) -> Result<(), Error>;
+
     fn get<K: AsRef<[u8]>>(&self, key: K) -> Result<Option<Vec<u8>>, Error>;
 
     fn exists<K: AsRef<[u8]>>(&self, key: K) -> Result<bool, Error>;

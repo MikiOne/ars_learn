@@ -29,6 +29,10 @@ impl Store for RocksdbStore {
         opts
     }
 
+    fn put<K: AsRef<[u8]>, V: AsRef<[u8]>>(&self, key: K, value: V) -> Result<(), Error> {
+        Ok(self.db.put(key, value)?)
+    }
+
     fn get<K: AsRef<[u8]>>(&self, key: K) -> Result<Option<Vec<u8>>, Error> {
         Ok(self.db.get(key)?)
     }
@@ -82,6 +86,17 @@ mod tests {
     use tempfile::Builder;
 
     use super::*;
+
+    #[test]
+    fn put() {
+        let store = RocksdbStore::new(
+            &RocksdbStore::default_options(),
+            Builder::new().prefix("iter").tempdir().unwrap(),
+        ).unwrap();
+
+        store.put([0, 0], [0, 0, 0]).unwrap();
+        assert_eq!(Some(vec![0, 0, 0]), store.get([0, 0]).unwrap());
+    }
 
     #[test]
     fn iter_from() {
