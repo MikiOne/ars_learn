@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use rocksdb::{DB, DBIteratorWithThreadMode, Direction, IteratorMode, Options, WriteBatch};
 
-use crate::store::{Batch, IteratorItem, Store};
+use crate::store::{Batch, IteratorItem, Kvpair, Store, StoreIter};
 use crate::store::error::Error;
 
 #[derive(Clone)]
@@ -58,6 +58,14 @@ impl Store for RocksdbStore {
     ) -> Box<dyn Iterator<Item=IteratorItem> + '_> {
         let mode = IteratorMode::From(from_key.as_ref(), direction);
         Box::new(self.db.iterator(mode)) as Box<_>
+    }
+
+    fn iter_to<K: AsRef<[u8]>>(
+        &self, from_key: K, direction: Direction,
+    ) -> Box<dyn Iterator<Item=Kvpair>> {
+        let ss = self.iter_from(from_key, direction).into_iter();
+        let iter = StoreIter::new(ss);
+        Box::new(iter)
     }
 }
 
