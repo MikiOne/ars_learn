@@ -91,11 +91,22 @@ mod tests {
     fn put() {
         let store = RocksdbStore::new(
             &RocksdbStore::default_options(),
-            Builder::new().prefix("iter").tempdir().unwrap(),
+            Builder::new().prefix("put").tempdir().unwrap(),
         ).unwrap();
 
         store.put([0, 0], [0, 0, 0]).unwrap();
         assert_eq!(Some(vec![0, 0, 0]), store.get([0, 0]).unwrap());
+    }
+
+    #[test]
+    fn put_str() {
+        let store = RocksdbStore::new(
+            &RocksdbStore::default_options(),
+            Builder::new().prefix("put_str").tempdir().unwrap(),
+        ).unwrap();
+
+        store.put("hello".as_bytes(), "world".as_bytes()).unwrap();
+        assert_eq!(Some("world".as_bytes().to_vec()), store.get("hello".as_bytes()).unwrap());
     }
 
     #[test]
@@ -130,23 +141,6 @@ mod tests {
                 (i.0.to_vec(), i.1.to_vec())
             })
         );
-
-        // let mut iter = store.iter([0, 0, 1], IteratorDirection::Reverse).unwrap();
-        // assert_eq!(
-        //     Some((vec![0, 0, 1], vec![0, 0, 1])),
-        //     iter.next().map(|i| (i.0.to_vec(), i.1.to_vec()))
-        // );
-        // assert_eq!(
-        //     Some((vec![0, 0, 0], vec![0, 0, 0])),
-        //     iter.next().map(|i| (i.0.to_vec(), i.1.to_vec()))
-        // );
-        // assert!(iter.next().is_none());
-        //
-        // let mut iter = store.iter([2, 0, 1], IteratorDirection::Reverse).unwrap();
-        // assert_eq!(
-        //     Some((vec![2, 0, 0, 1], vec![2, 0, 0, 1])),
-        //     iter.next().map(|i| (i.0.to_vec(), i.1.to_vec()))
-        // );
     }
 
     #[test]
