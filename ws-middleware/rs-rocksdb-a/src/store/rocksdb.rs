@@ -60,13 +60,13 @@ impl Store for RocksdbStore {
         Box::new(self.db.iterator(mode)) as Box<_>
     }
 
-    fn iter_to<K: AsRef<[u8]>>(
-        &self, from_key: K, direction: Direction,
-    ) -> Box<dyn Iterator<Item=Kvpair>> {
-        let ss = self.iter_from(from_key, direction).into_iter();
-        let iter = StoreIter::new(ss);
-        Box::new(iter)
-    }
+    // fn iter_to<K: AsRef<[u8]>>(
+    //     &self, from_key: K, direction: Direction,
+    // ) -> Box<dyn Iterator<Item=Kvpair>> {
+    //     let ss = self.iter_from(from_key, direction).into_iter();
+    //     let iter = StoreIter::new(ss);
+    //     Box::new(iter)
+    // }
 }
 
 pub(crate) struct RocksdbBatch {

@@ -24,17 +24,17 @@ impl<T> StoreIter<T> {
     }
 }
 
-impl<T> Iterator for StoreIter<T>
-where
-    T: Iterator,
-    T::Item: Into<Kvpair>,
-{
-    type Item = T::Item;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        self.next().map(|item| item.into())
-    }
-}
+// impl<T> Iterator for StoreIter<T>
+// where
+//     T: Iterator,
+//     T::Item: Into<Kvpair>,
+// {
+//     type Item = T::Item;
+//
+//     fn next(&mut self) -> Option<Self::Item> {
+//         self.next().map(|item| item.into())
+//     }
+// }
 
 impl From<IteratorItem> for Kvpair {
     fn from(value: IteratorItem) -> Self {
@@ -73,9 +73,9 @@ pub(crate) trait Store {
         &self, from_key: K, direction: Direction,
     ) -> Box<dyn Iterator<Item=IteratorItem> + '_>;
 
-    fn iter_to<K: AsRef<[u8]>>(
-        &self, to_key: K, direction: Direction,
-    ) -> Box<dyn Iterator<Item=Kvpair>>;
+    // fn iter_to<K: AsRef<[u8]>>(
+    //     &self, to_key: K, direction: Direction,
+    // ) -> Box<dyn Iterator<Item=Kvpair>>;
 }
 
 pub(crate) trait Batch {
