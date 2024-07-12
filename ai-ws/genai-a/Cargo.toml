@@ -1,0 +1,8 @@
+[package]
+name = "genai-a"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+genai = "=0.1.2" # Version lock for `0.1.x`
+tokio = { version = "1.38.0", features = ["full"] }

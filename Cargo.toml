@@ -37,14 +37,17 @@ members = [
     "ws-tyr/course-exam", "ws-rs/num_cpu",
     "ws-tyr/course-exam",
     "ws-tyr/kv-server",
-#    "ws-grpc/prost-demo",
-#    "ws-grpc/grpc-tonic",
-#    "ws-grpc/btc-payment-grpc",
+    #    "ws-grpc/prost-demo",
+    #    "ws-grpc/grpc-tonic",
+    #    "ws-grpc/btc-payment-grpc",
     "ws-rs/crossbeam-a",
     "ws-net/tokio-stream",
     "ws-w3b/eth-server",
     "ws-middleware/rs-rocksdb-a",
-    "ws-middleware/ckb-rocksdb", "ws-w3b/data-store", "ws-w3b/bchain-server",
+    "ws-middleware/ckb-rocksdb",
+    "ws-w3b/data-store",
+    "ws-w3b/bchain-server",
+    "ai-ws/genai-a",
 ]
 
 # [[bin]]
