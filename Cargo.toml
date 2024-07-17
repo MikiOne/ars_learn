@@ -47,7 +47,7 @@ members = [
     "ws-middleware/ckb-rocksdb",
     "ws-w3b/data-store",
     "ws-w3b/bchain-server",
-    "ai-ws/genai-a",
+    "ai-ws/genai-a", "ws-tyr/con_utils",
 ]
 
 # [[bin]]
