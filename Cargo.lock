@@ -7514,6 +7514,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "sync-atomic"
+version = "0.1.0"
+
+[[package]]
 name = "sync_wrapper"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
