@@ -1,6 +1,7 @@
 use std::collections::VecDeque;
 use std::sync::{Arc, Condvar, Mutex};
 use std::sync::atomic::{AtomicUsize, Ordering};
+
 use anyhow::anyhow;
 
 struct Shared<T> {
@@ -124,8 +125,8 @@ fn unbounded<T>() -> (Sender<T>, Receiver<T>) {
 #[cfg(test)]
 mod tests {
     use std::thread;
-    use std::thread::Thread;
     use std::time::Duration;
+
     use super::*;
 
     #[test]
@@ -169,11 +170,11 @@ mod tests {
     /// 当队列空的时候，receiver 所在的线程会被阻塞
     #[test]
     fn receiver_should_be_blocked_when_nothing_to_read() {
-        let (mut s, mut r) = unbounded();
+        let (mut s, r) = unbounded();
         let mut s1 = s.clone();
 
         thread::spawn(move || {
-            for (idx, val) in r.recv().into_iter().enumerate() {
+            for (idx, val) in r.into_iter().enumerate() {
                 assert_eq!(idx, val);
             }
             assert!(false);
@@ -228,5 +229,26 @@ mod tests {
 
         assert!(s.send("hello").is_err());
         assert!(s1.send("hello").is_err());
+    }
+
+    // 如果 Receiver 被阻塞，而此刻所有 Sender 都走了，那么 Receiver 就没有人唤醒，会带来资源的泄露。
+    #[test]
+    fn receiver_shall_be_notified_when_all_senders_exit() {
+        let (s, mut r) = unbounded::<usize>();
+        let (mut sender, mut receiver) = unbounded::<usize>();
+
+        let t1 = thread::spawn(move || {
+            println!("t1");
+            sender.send(0).unwrap();
+            assert!(r.recv().is_err());
+        });
+
+        thread::spawn(move || {
+            let re = receiver.recv().unwrap();
+            println!("t2 recv: {:?}", re);
+            drop(s);
+        });
+
+        t1.join().unwrap();
     }
 }
