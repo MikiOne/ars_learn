@@ -7,7 +7,7 @@ use std::{
 };
 
 static S: AtomicU64 = AtomicU64::new(0);
-fn relaxed() {
+fn relaxed(i: i32) {
     let a = Arc::new(AtomicBool::new(false));
     let b = Arc::new(AtomicBool::new(false));
     let a_clone = a.clone();
@@ -33,10 +33,12 @@ fn relaxed() {
 
 fn main() {
     let cnt = 100000;
-    for _ in 0..cnt {
-        relaxed();
+    for i in 0..cnt {
+        relaxed(i);
     }
-    // 结果可能大于10000
+    // 结果可能大于100000
     let s = S.load(Ordering::SeqCst);
     println!("s: {}", s);
 }
+// s: 99999
+// s: 99996
