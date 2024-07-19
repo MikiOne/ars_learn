@@ -1,6 +1,8 @@
 use std::sync::mpsc;
 use std::thread;
 
+/// 用一个 channel 来控制两个线程的执行顺序
+/// Use a channel to control the order in which two threads are executed
 fn main() {
     let (tx, rx) = mpsc::channel();
 
