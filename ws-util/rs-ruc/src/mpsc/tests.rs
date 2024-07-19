@@ -70,7 +70,7 @@ mod tests {
 
         std::thread::sleep(std::time::Duration::from_millis(1));
 
-        // 线程t1处理完成
+        // 线程t1还未完成
         assert!(!t1.is_finished());
 
         assert_eq!(s1.total_queued_items(), 0);
@@ -112,5 +112,27 @@ mod tests {
 
         assert!(s.send("hello").is_err());
         assert!(s1.send("hello").is_err());
+    }
+
+    /// 缓存需工作
+    #[test]
+    fn channel_fast_path_should_work() {
+        let (mut s, mut r) = mpsc::unbounded();
+        for i in 0..10 {
+            s.send(i).unwrap();
+        }
+
+        assert!(r.cached.is_empty());
+        assert_eq!(r.recv().unwrap(), 0);
+        assert_eq!(r.cached.len(), 9);
+        // assert_eq!(r.shared.queue.lock().unwrap().len(), 0);
+        assert_eq!(s.total_queued_items(), 0);
+
+        // for i in 1..10 {
+        //     assert_eq!(r.recv().unwrap(), i);
+        // }
+        for (idx, val) in r.into_iter().take(9).enumerate() {
+            assert_eq!(idx + 1, val)
+        }
     }
 }

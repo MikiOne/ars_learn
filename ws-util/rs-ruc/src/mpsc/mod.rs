@@ -90,7 +90,7 @@ impl<T> Sender<T> {
 
 pub struct Receiver<T> {
     shared: Arc<Channel<T>>,
-    // cached: VecDeque<T>,
+    cached: VecDeque<T>,
 }
 
 impl<T> Iterator for Receiver<T> {
@@ -108,15 +108,19 @@ impl<T> Drop for Receiver<T> {
 }
 
 impl<T> Receiver<T> {
-    fn recv(&self) -> Result<T, anyhow::Error> {
-        // if self.total_senders() == 0 {
-        //     return Err(anyhow!("no sender left"));
-        // }
+    fn recv(&mut self) -> Result<T, anyhow::Error> {
+        // fast path
+        if let Some(val) = self.cached.pop_front() {
+            return Ok(val);
+        }
 
         let mut queue = self.shared.queue.lock().unwrap();
         loop {
             match queue.pop_front() {
                 Some(val) => {
+                    if self.cached.is_empty() {
+                        std::mem::swap(&mut self.cached, &mut queue);
+                    }
                     return Ok(val);
                 }
                 None if self.total_senders() == 0 => return Err(anyhow!("no sender left")),
@@ -137,7 +141,7 @@ fn unbounded<T>() -> (Sender<T>, Receiver<T>) {
     let shared = Arc::clone(&channel);
 
     let sender = Sender { shared };
-    let receiver = Receiver { shared: channel };
+    let receiver = Receiver { shared: channel, cached: VecDeque::with_capacity(INIT_SIZE) };
 
     (sender, receiver)
 }
