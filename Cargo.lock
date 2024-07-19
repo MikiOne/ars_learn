@@ -6679,6 +6679,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "rs-ruc"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+]
+
+[[package]]
 name = "rshttp"
 version = "0.1.1"
 dependencies = [
