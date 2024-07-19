@@ -60,7 +60,10 @@ impl<T> Clone for Sender<T> {
 
 impl<T> Drop for Sender<T> {
     fn drop(&mut self) {
-        self.shared.senders.fetch_sub(1, Ordering::AcqRel);
+        let old_val = self.shared.senders.fetch_sub(1, Ordering::AcqRel);
+        if old_val <= 1 {
+            self.shared.available.notify_all();
+        }
     }
 }
 
@@ -129,6 +132,7 @@ mod tests {
 
     use super::*;
 
+    /// channel可以发送接收数据
     #[test]
     fn channel_should_work() {
         let (mut s, mut r) = unbounded();
@@ -138,6 +142,7 @@ mod tests {
         assert_eq!(result, "hello world");
     }
 
+    /// 多个sender可以发送数据
     #[test]
     fn multiple_senders_should_work() {
         let (mut s1, mut r) = unbounded();
@@ -167,7 +172,7 @@ mod tests {
         assert_eq!(res, [1, 2, 3]);
     }
 
-    /// 当队列空的时候，receiver 所在的线程会被阻塞
+    /// 当队列为空的时候，receiver所在的线程会被阻塞
     #[test]
     fn receiver_should_be_blocked_when_nothing_to_read() {
         let (mut s, r) = unbounded();
@@ -196,7 +201,7 @@ mod tests {
         assert_eq!(s1.total_queued_items(), 0);
     }
 
-    // 如果现在所有 Sender 都退出作用域，Receiver 继续接收，到没有数据可读了
+    /// 如果现在所有 Sender 都退出作用域，Receiver 继续接收，直到没有数据可读了，则接收报错
     #[test]
     fn last_sender_drop_should_error_when_receive() {
         let (mut s, mut r) = unbounded();
@@ -218,7 +223,7 @@ mod tests {
         assert!(r.recv().is_err());
     }
 
-    // 那么如果没有 Receiver了，Sender 发送时是不是也应该错误返
+    /// 如果没有 Receiver了，Sender发送时应该错误返回
     #[test]
     fn receiver_drop_should_error_when_send() {
         let (mut s, mut s1) = {
@@ -231,7 +236,7 @@ mod tests {
         assert!(s1.send("hello").is_err());
     }
 
-    // 如果 Receiver 被阻塞，而此刻所有 Sender 都走了，那么 Receiver 就没有人唤醒，会带来资源的泄露。
+    /// 如果 Receiver 被阻塞，而此刻所有 Sender 都走了（drop），那么 Receiver 就没有人唤醒，会带来资源的泄露。
     #[test]
     fn receiver_shall_be_notified_when_all_senders_exit() {
         let (s, mut r) = unbounded::<usize>();
