@@ -71,6 +71,7 @@ impl<T> Drop for Sender<T> {
 
 impl<T> Receiver<T> {
     fn recv(&mut self) -> anyhow::Result<T> {
+        // 无锁 fast path
         if let Some(val) = self.cached.pop_front() {
             return Ok(val);
         }
@@ -270,13 +271,10 @@ mod tests {
 
     /// Receiver使用cached测试
     #[test]
-    fn receiver_cached_should_work() {
-        let (s, mut r) = unbounded();
+    fn channel_fast_path_should_work() {
+        let (mut s, mut r) = unbounded();
         for i in 0..10 {
-            let mut si = s.clone();
-            thread::spawn(move || {
-                si.send(i).unwrap();
-            }).join().unwrap();
+            s.send(i).unwrap();
         }
 
         assert!(r.cached.is_empty());
@@ -284,10 +282,6 @@ mod tests {
         assert_eq!(s.total_queued_items(), 0);
         assert_eq!(r.cached.len(), 9);
 
-        // for i in 1..10 {
-        //     let re = r.recv().unwrap();
-        //     assert_eq!(i, re);
-        // }
         for (idx, val) in r.into_iter().take(9).enumerate() {
             assert_eq!(idx + 1, val);
         }
