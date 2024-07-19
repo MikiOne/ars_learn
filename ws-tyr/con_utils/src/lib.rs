@@ -1,4 +1,5 @@
 use std::collections::VecDeque;
+use std::mem::swap;
 use std::sync::{Arc, Condvar, Mutex};
 use std::sync::atomic::{AtomicUsize, Ordering};
 
@@ -17,6 +18,7 @@ struct Sender<T> {
 
 struct Receiver<T> {
     shared: Arc<Shared<T>>,
+    cached: VecDeque<T>,
 }
 
 impl<T> Sender<T> {
@@ -69,10 +71,19 @@ impl<T> Drop for Sender<T> {
 
 impl<T> Receiver<T> {
     fn recv(&mut self) -> anyhow::Result<T> {
+        if let Some(val) = self.cached.pop_front() {
+            return Ok(val);
+        }
+
         let mut inner = self.shared.queue.lock().unwrap();
         loop {
             match inner.pop_front() {
-                Some(val) => return Ok(val),
+                Some(val) => {
+                    if !inner.is_empty() {
+                        swap(&mut self.cached, &mut inner);
+                    }
+                    return Ok(val);
+                }
                 None if self.total_senders() == 0 => return Err(anyhow!("No sender left")),
                 None => {
                     inner = self.shared.available.wait(inner)
@@ -120,7 +131,7 @@ fn unbounded<T>() -> (Sender<T>, Receiver<T>) {
     let shared = Arc::new(shared);
 
     let sender = Sender { shared: shared.clone() };
-    let receiver = Receiver { shared };
+    let receiver = Receiver { shared, cached: VecDeque::with_capacity(INITIAL_SIZE) };
     (sender, receiver)
 }
 
@@ -255,5 +266,30 @@ mod tests {
         });
 
         t1.join().unwrap();
+    }
+
+    /// Receiver使用cached测试
+    #[test]
+    fn receiver_cached_should_work() {
+        let (s, mut r) = unbounded();
+        for i in 0..10 {
+            let mut si = s.clone();
+            thread::spawn(move || {
+                si.send(i).unwrap();
+            }).join().unwrap();
+        }
+
+        assert!(r.cached.is_empty());
+        assert_eq!(r.recv().unwrap(), 0);
+        assert_eq!(s.total_queued_items(), 0);
+        assert_eq!(r.cached.len(), 9);
+
+        // for i in 1..10 {
+        //     let re = r.recv().unwrap();
+        //     assert_eq!(i, re);
+        // }
+        for (idx, val) in r.into_iter().take(9).enumerate() {
+            assert_eq!(idx + 1, val);
+        }
     }
 }
