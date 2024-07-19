@@ -39,7 +39,7 @@ mod tests {
         let mut res = [r1, r2, r3];
         res.sort();
 
-        assert_eq!(res, [0, 1, 2, 3]);
+        assert_eq!(res, [1, 2, 3]);
     }
 
     /// 当队列为空的时候，receiver所在的线程会被阻塞
@@ -88,7 +88,7 @@ mod tests {
         // sender 即用即抛
         for sender in senders {
             std::thread::spawn(move || {
-                sender.send().unwrap();
+                sender.send(1).unwrap();
             }).join().unwrap();
         }
 

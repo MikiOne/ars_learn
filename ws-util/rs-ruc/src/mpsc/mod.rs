@@ -25,14 +25,14 @@ impl Default for Counter {
 }
 
 pub(crate) struct Channel<T> {
-    channel: Mutex<VecDeque<T>>,
+    queue: Mutex<VecDeque<T>>,
     counter: Counter,
 }
 
 impl<T> Default for Channel<T> {
     fn default() -> Self {
         Channel {
-            channel: Mutex::new(VecDeque::with_capacity(INIT_SIZE)),
+            queue: Mutex::new(VecDeque::with_capacity(INIT_SIZE)),
             counter: Counter::default(),
         }
     }
@@ -45,7 +45,7 @@ pub struct Sender<T> {
 impl<T> Clone for Sender<T> {
     fn clone(&self) -> Self {
         self.shared.counter.senders.fetch_add(1, Ordering::Relaxed);
-        Sender { shared: self.shared.clone() }
+        Sender { shared: Arc::clone(&self.shared) }
     }
 }
 
@@ -60,17 +60,30 @@ impl<T> Drop for Sender<T> {
 
 impl<T> Sender<T> {
     pub fn send(&self, value: T) -> Result<(), anyhow::Error> {
-        let mut queue = self.shared.channel.lock().unwrap();
-        let receivers = self.shared.counter.receivers.load(Ordering::SeqCst);
-        if receivers == 0 {
+        if self.total_receivers() == 0 {
             return Err(anyhow!("no receiver left"));
         }
 
-        queue.push_back(value);
-        // if self.channel.counter == 1 {
-        //     self.channel.counter.available.notify_one();
-        // }
+        let was_empty = {
+            let mut queue = self.shared.queue.lock().unwrap();
+            let is_empty = queue.is_empty();
+            queue.push_back(value);
+            is_empty
+        };
+
+        if was_empty {
+            self.shared.counter.available.notify_one();
+        }
         Ok(())
+    }
+
+    fn total_receivers(&self) -> usize {
+        self.shared.counter.receivers.load(Ordering::SeqCst)
+    }
+
+    fn total_queued_items(&self) -> usize {
+        let queue = self.shared.queue.lock().unwrap();
+        queue.len()
     }
 }
 
@@ -80,13 +93,27 @@ pub struct Receiver<T> {
     // cached: VecDeque<T>,
 }
 
+impl<T> Iterator for Receiver<T> {
+    type Item = T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.recv().ok()
+    }
+}
+
+impl<T> Drop for Receiver<T> {
+    fn drop(&mut self) {
+        self.shared.counter.receivers.fetch_sub(1, Ordering::AcqRel);
+    }
+}
+
 impl<T> Receiver<T> {
     fn recv(&self) -> Result<T, anyhow::Error> {
-        let mut queue = self.shared.channel.lock().unwrap();
-        if self.total_senders() == 0 {
-            return Err(anyhow!("no sender left"));
-        }
+        // if self.total_senders() == 0 {
+        //     return Err(anyhow!("no sender left"));
+        // }
 
+        let mut queue = self.shared.queue.lock().unwrap();
         loop {
             match queue.pop_front() {
                 Some(val) => {
@@ -94,7 +121,7 @@ impl<T> Receiver<T> {
                 }
                 None if self.total_senders() == 0 => return Err(anyhow!("no sender left")),
                 None => {
-                    queue = self.shared.channel.wait(queue).unwrap();
+                    queue = self.shared.counter.available.wait(queue).map_err(|_| anyhow!("condvar lock poisoned"))?;
                 }
             }
         }
@@ -107,7 +134,10 @@ impl<T> Receiver<T> {
 
 fn unbounded<T>() -> (Sender<T>, Receiver<T>) {
     let channel = Arc::new(Channel::default());
-    let sender = Sender { shared: channel.clone() };
+    let shared = Arc::clone(&channel);
+
+    let sender = Sender { shared };
     let receiver = Receiver { shared: channel };
+
     (sender, receiver)
 }
