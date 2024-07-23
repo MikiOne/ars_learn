@@ -10,6 +10,7 @@ struct Lock<T> {
 }
 
 unsafe impl<T> Sync for Lock<T> {}
+
 impl<T> Debug for Lock<T>
 where
     T: Debug,
@@ -30,7 +31,11 @@ impl<T> Lock<T> {
             .locked
             .compare_exchange(false, true, Ordering::Acquire, Ordering::Relaxed)
             .is_err()
-        {}
+        {
+            // 性能优化：compare_exchange 需要独占访问，当拿不到锁时，我们
+            // 先不停检测 locked 的状态，直到其 unlocked 后，再尝试拿锁
+            while self.locked.load(Ordering::Acquire) == true {}
+        }
 
         // 执行
         op(&mut self.data.borrow_mut());
