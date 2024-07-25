@@ -12,7 +12,7 @@ lazy_static! {
         "subscribers"
     ]);
 }
-
+// 模板方法
 #[cfg(test)]
 mod tests {
     use super::*;
