@@ -1,3 +1,4 @@
+/// https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=b80de6d4e6d75bf59bb37db386264fed
 trait DoStep2 {
     fn do_step2_maybe_different(&mut self);
 }
