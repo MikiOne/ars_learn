@@ -49,6 +49,7 @@ members = [
     "ws-w3b/bchain-server",
     "ai-ws/genai-a", "ws-tyr/con_utils", "ws-std/sync-atomic", "ws-util/rs-ruc",
     "design-patterns/template-method",
+    "design-patterns/strategy-pattern",
 ]
 
 # [[bin]]
