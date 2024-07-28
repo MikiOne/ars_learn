@@ -51,6 +51,7 @@ members = [
     "design-patterns/template-method",
     "design-patterns/strategy-pattern",
     "ws-err/eyre-a",
+    "ws-err/snafu-a", "ws-err/failure-a",
 ]
 
 # [[bin]]
