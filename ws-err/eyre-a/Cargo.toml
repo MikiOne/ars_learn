@@ -1,0 +1,7 @@
+[package]
+name = "eyre-a"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+eyre = { version = "0.6", features = ["track-caller"] }
