@@ -6747,6 +6747,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "rs-actor"
+version = "0.1.0"
+
+[[package]]
 name = "rs-future"
 version = "0.1.0"
 dependencies = [
