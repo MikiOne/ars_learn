@@ -10,3 +10,4 @@ toml = { version = "0.8.19", features = ["display", "parse"] }
 #serde_yaml2 = "0.1.2"
 tokio = { version = "1.39.2", features = ["full"] }
 futures = "0.3.30"
+tokio-util = { version = "0.7.11", features = ["codec"] }
