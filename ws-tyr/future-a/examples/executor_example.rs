@@ -1,7 +1,16 @@
 use futures::{SinkExt, StreamExt};
 use tokio::net::TcpListener;
 use tokio_util::codec::{Framed, LinesCodec};
-
+/// 用 telnet 和这个服务器交互：
+///
+/// ❯ telnet localhost 8080
+/// Trying 127.0.0.1...
+/// Connected to localhost.
+/// Escape character is '^]'.
+///
+/// hello
+/// I got: hello
+/// Connection closed by foreign host.
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     // tcp监听8080端口
