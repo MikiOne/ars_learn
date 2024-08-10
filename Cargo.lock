@@ -2791,6 +2791,7 @@ name = "future-a"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "futures",
  "serde_yaml",
  "tokio",
  "toml 0.8.19",
