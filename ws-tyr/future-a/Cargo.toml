@@ -11,3 +11,5 @@ toml = { version = "0.8.19", features = ["display", "parse"] }
 tokio = { version = "1.39.2", features = ["full"] }
 futures = "0.3.30"
 tokio-util = { version = "0.7.11", features = ["codec"] }
+blake3 = "1.5.3"
+rayon = "1.10.0"
