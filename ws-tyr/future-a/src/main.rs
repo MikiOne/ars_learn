@@ -60,8 +60,6 @@ async fn main() -> anyhow::Result<()> {
             Ok::<_, anyhow::Error>(())
         });
     }
-
-    Ok(())
 }
 // 使用 rayon 并发计算 u32 空间下所有 nonce，直到找到有头 N 个 0 的哈希
 pub fn pow(s: &str) -> Option<(String, u32)> {
