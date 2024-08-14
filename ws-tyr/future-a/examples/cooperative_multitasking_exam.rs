@@ -1,5 +1,3 @@
-#![feature(duration_constructors)]
-
 use std::time::Duration;
 
 // 强制 tokio 只使用一个工作线程，这样 task 2 不会跑到其它线程执行
