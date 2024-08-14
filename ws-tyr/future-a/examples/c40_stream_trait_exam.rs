@@ -38,8 +38,8 @@ impl<R: AsyncRead> Stream for LineStream<R> {
 async fn main() -> anyhow::Result<()> {
     let file = fs::File::open("./Cargo.toml").await?;
     let reader = BufReader::new(file);
-    let mut st = LineStream::new(reader);
-    while let Some(Ok(line)) = st.next().await {
+    let mut ls = LineStream::new(reader);
+    while let Some(Ok(line)) = ls.next().await {
         println!("Got: {}", line);
     }
     Ok(())
