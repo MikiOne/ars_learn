@@ -41,7 +41,6 @@ members = [
     #    "ws-grpc/grpc-tonic",
     #    "ws-grpc/btc-payment-grpc",
     "ws-rs/crossbeam-a",
-    "ws-tokio/tokio-stream",
     "ws-w3b/eth-server",
     "ws-middleware/rs-rocksdb-a",
     "ws-middleware/ckb-rocksdb",
@@ -51,7 +50,11 @@ members = [
     "design-patterns/template-method",
     "design-patterns/strategy-pattern",
     "ws-err/eyre-a",
-    "ws-err/snafu-a", "ws-err/failure-a", "ws-err/tracing-a", "ws-util/rs-actor", "ws-k8s-docker/bollard-a", "ws-k8s-docker/k8s-openapi-a", "ws-tyr/future-a",
+    "ws-err/snafu-a", "ws-err/failure-a", "ws-err/tracing-a", "ws-util/rs-actor", "ws-k8s-docker/bollard-a",
+    "ws-k8s-docker/k8s-openapi-a",
+    "ws-tyr/future-a",
+    "ws-tokio/tokio-stream",
+    "ws-tokio/tokio-a",
 ]
 
 # [[bin]]
