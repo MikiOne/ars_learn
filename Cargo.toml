@@ -1,4 +1,4 @@
-[package]
+[workspace.package]
 name = "ars_learn"
 version = "0.1.0"
 edition = "2021"
@@ -6,61 +6,14 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [workspace]
+resolver = "2"
 members = [
-    "ws-web/axum-web-a",
-    "ws-web/ntex-web-a",
-    "ws-web/ntex-web-diesel-async",
-    "ws-web/web-socket",
-    "ws-web/ntex-yew",
-    "ws-web/tide-a",
-    "ws-web/actix-web-a",
-    "ws-rs/rayon-demo",
-    "ws-rs/insta-a",
-    "ws-rs/toml_setting",
-    "ws_cli/clap-demo",
-    "ws-middleware/governor-demo",
-    "ws-net/pnet-demo",
-    "ws-middleware/async-log-watch-a",
-    #    "ws-middleware/kafka-a",
-    "ws-middleware/redis-a",
-    "ws-middleware/amqp-lapin",
-    "ws-middleware/DTT-a",
-    "ws-rs/log4rs-a",
-    "ws-net/pingora-a",
-    "ws-net/rate-limiter",
-    "ws-gui/gui-druid",
-    "ws-tyr/rs-http",
-    "ws_cli/syntect-demo",
-    "ws-tyr/Thumbor",
-    "ws-rs/rs-future",
-    "ws-middleware/amqp-mobc-lapin",
-    "ws-tyr/course-exam", "ws-rs/num_cpu",
-    "ws-tyr/course-exam",
-    "ws-tyr/kv-server",
-    #    "ws-grpc/prost-demo",
-    #    "ws-grpc/grpc-tonic",
-    #    "ws-grpc/btc-payment-grpc",
-    "ws-rs/crossbeam-a",
-    "ws-tokio/tokio-stream",
-    "ws-w3b/eth-server",
-    "ws-middleware/rs-rocksdb-a",
-    "ws-middleware/ckb-rocksdb",
-    "ws-w3b/data-store",
-    "ws-w3b/bchain-server",
-    "ai-ws/genai-a", "ws-tyr/con_utils", "ws-std/sync-atomic", "ws-util/rs-ruc",
-    "design-patterns/template-method",
-    "design-patterns/strategy-pattern",
-    "ws-err/eyre-a",
-    "ws-err/snafu-a", "ws-err/failure-a", "ws-err/tracing-a", "ws-util/rs-actor", "ws-k8s-docker/bollard-a", "ws-k8s-docker/k8s-openapi-a", "ws-tyr/future-a",
+    "ws-base/base-a",
 ]
 
 # [[bin]]
 # name = "ws-server"
 # path = "projs/web-socket/src/ws_server"
-
-[dependencies]
-tokio = { version = "1.33.0", features = ["full"] }
-config = "0.14.0"
 
 
 # build release opt

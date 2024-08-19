@@ -1,8 +1,0 @@
-syntax = "proto3";
-
-package abi;
-
-message MessageBO {
-  string msg = 1;
-  bytes data = 2;
-}

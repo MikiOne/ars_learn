@@ -1,2 +1,0 @@
-- reference: ckb/util/indexer/src/store
-- github: https://github.com/nervosnetwork/ckb
