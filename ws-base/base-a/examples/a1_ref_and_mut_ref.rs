@@ -1,5 +1,5 @@
 // error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immutable
-//  --> ws-base/base-a/examples/ref_and_mut_ref.rs:5:5
+//  --> ws-base/base-a/examples/a1_ref_and_mut_ref:5:5
 //   |
 // 3 |     let n = &v[0];
 //   |              - immutable borrow occurs here
