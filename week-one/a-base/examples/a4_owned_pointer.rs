@@ -11,7 +11,7 @@ fn main() {
     // println!("{}", mine); // this would not compile because `now_its_mine` now owns the pointer
 }
 // error[E0382]: borrow of moved value: `mine`
-//   --> ws-base/base-a/examples/a4_owned_pointer.rs:11:20
+//   --> week-one/a-base/examples/a4_owned_pointer.rs:11:20
 //    |
 // 4  |     let mut mine: Box<i32> = Box::new(3);
 //    |         -------- move occurs because `mine` has type `Box<i32>`, which does not implement the `Copy` trait

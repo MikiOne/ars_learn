@@ -8,7 +8,7 @@ edition = "2021"
 [workspace]
 resolver = "2"
 members = [
-    "ws-base/base-a",
+    "week-one/a-base", "week-one/b-rscli",
 ]
 
 # [[bin]]
