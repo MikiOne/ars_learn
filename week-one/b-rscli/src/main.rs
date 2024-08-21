@@ -22,10 +22,16 @@ struct CsvOpts {
     /// input CSV filename
     #[arg(short, long, value_parser = check_file_exists)]
     input: String,
+
+    /// output filename
     #[arg(short, long, default_value = "output.json")]
     output: String,
-    #[arg(long, default_value_t = true)]
+
+    /// include header in output (default: true)
+    #[arg(short = 'a', long, default_value_t = true)]
     header: bool,
+
+    /// delimiter for CSV
     #[arg(short, long, default_value_t = ',')]
     delimiter: char,
 }
@@ -45,7 +51,6 @@ fn main() -> anyhow::Result<()> {
 
     match cli.cmd {
         SubCommand::Csv(opts) => {
-            println!("CsvOpts: {:?}", opts);
             convert(&opts.input, &opts.output)?
         }
     }

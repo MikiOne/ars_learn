@@ -5,21 +5,21 @@ use csv::ReaderBuilder;
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct Record {
-    #[serde(rename = "下线ID")]
+    // #[serde(rename = "下线ID")]
     user_id: u64,
-    #[serde(rename = "下线昵称")]
+    // #[serde(rename = "下线昵称")]
     nick_name: String,
-    #[serde(rename = "下线等级")]
+    // #[serde(rename = "下线等级")]
     below_level: String,
-    #[serde(rename = "注册时间")]
+    // #[serde(rename = "注册时间")]
     register_time: String,
-    #[serde(rename = "累计充值金额")]
+    // #[serde(rename = "累计充值金额")]
     deposit_amount: f32,
-    #[serde(rename = "累计下注金额")]
+    // #[serde(rename = "累计下注金额")]
     bet_amount: f32,
-    #[serde(rename = "累计体现金额")]
+    // #[serde(rename = "累计体现金额")]
     withdraw_amount: f32,
-    #[serde(rename = "返佣贡献金额")]
+    // #[serde(rename = "返佣贡献金额")]
     commission_amount: f32,
 }
 
