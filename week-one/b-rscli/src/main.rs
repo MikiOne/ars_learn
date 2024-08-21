@@ -2,6 +2,7 @@
 
 use std::fs::File;
 use clap::{Args, Parser, Subcommand};
+use rscli::converter::convert;
 
 #[derive(Parser, Debug)]
 #[command(name = "rscli", version, about, long_about = None)]
@@ -9,6 +10,7 @@ struct RsCli {
     #[command(subcommand)]
     cmd: SubCommand,
 }
+
 #[derive(Subcommand, Debug)]
 enum SubCommand {
     #[command(name = "csv", about = "Show CSV or convert CSV to other formats")]
@@ -37,9 +39,17 @@ fn check_file_exists(filename: &str) -> Result<String, String> {
 }
 
 // rscli csv -i input.csv -o output.json --header -d ','
-fn main() {
+fn main() -> anyhow::Result<()> {
     let cli = RsCli::parse();
-
     println!("rscli: {:?}", cli);
+
+    match cli.cmd {
+        SubCommand::Csv(opts) => {
+            println!("CsvOpts: {:?}", opts);
+            convert(&opts.input, &opts.output)?
+        }
+    }
+
+    Ok(())
 }
 
