@@ -1,9 +1,9 @@
 // rscli csv -i input.csv -o output.json --header -d ','
 
-use std::fs::File;
 use std::path::Path;
-use clap::{Args, Parser, Subcommand};
+
 use clap::{Parser, Subcommand};
+
 use rscli::converter::convert;
 
 #[derive(Parser, Debug)]
