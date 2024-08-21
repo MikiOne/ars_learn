@@ -1,6 +1,7 @@
 // rscli csv -i input.csv -o output.json --header -d ','
 
 use std::fs::File;
+use std::path::Path;
 use clap::{Args, Parser, Subcommand};
 
 #[derive(Parser, Debug)]
@@ -29,11 +30,16 @@ struct CsvOpts {
 }
 
 fn check_file_exists(filename: &str) -> Result<String, String> {
-    if let Ok(_file) = File::open(filename) {
-        Ok(filename.to_string())
+    if Path::new(filename).exists() {
+        Ok(filename.into())
     } else {
         Err(format!("Cannot open file {:?}", filename))
     }
+    // if let Ok(_file) = File::open(filename) {
+    //     Ok(filename.into())
+    // } else {
+    //     Err(format!("Cannot open file {:?}", filename))
+    // }
 }
 
 // rscli csv -i input.csv -o output.json --header -d ','
