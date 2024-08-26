@@ -4,3 +4,4 @@
 /._target/
 logs/
 /ws-middleware/rs-rocksdb-a/demo_rocks_db/
+output.json
