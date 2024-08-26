@@ -54,7 +54,7 @@ members = [
     "ws-k8s-docker/k8s-openapi-a",
     "ws-tyr/future-a",
     "ws-tokio/tokio-stream",
-    "ws-tokio/tokio-a",
+    "ws-tokio/tokio-a", "ws_cli/clap-rustyline",
 ]
 
 # [[bin]]
