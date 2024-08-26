@@ -1,0 +1,11 @@
+[package]
+name = "clap-rustyline"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.5.16", features = ["derive"] }
+rustyline = { version = "14.0.0", features = ["with-file-history"] }
+
+#[features]
+#default = ["rustyline/with-file-history"]
