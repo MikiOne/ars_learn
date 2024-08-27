@@ -55,7 +55,7 @@ members = [
     "ws-tyr/future-a",
     "ws-tokio/tokio-stream",
     "ws-tokio/tokio-a", "ws_cli/clap-rustyline",
-    "ws-tokio/tokio-a", "ws_cli/argh-demo",
+    "ws_cli/argh-demo",
 ]
 
 # [[bin]]
