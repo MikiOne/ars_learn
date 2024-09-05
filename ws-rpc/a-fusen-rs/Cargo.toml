@@ -1,0 +1,7 @@
+[package]
+name = "a-fusen-rs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+fusen-rs = "0.6.7"
