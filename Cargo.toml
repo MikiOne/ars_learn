@@ -58,7 +58,7 @@ members = [
     "ws-tokio/tokio-a",
     "ws_cli/clap-rustyline",
     "ws_cli/argh-demo",
-    "ws-db/duckdb-a", "ws-web/schedule-a",
+    "ws-db/duckdb-a", "ws-web/schedule-a", "ws-crypto",
 ]
 
 # [[bin]]
