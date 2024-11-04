@@ -1,0 +1,9 @@
+[package]
+name = "multisig-wallet"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.86"
+#ethers = { version = "2.0.14", features = ["default",] }
+tokio = { version = "1.15.0", features = ["full"] }
