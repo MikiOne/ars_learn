@@ -37,6 +37,7 @@ members = [
     "ws-tyr/course-exam", "ws-rs/num_cpu",
     "ws-tyr/course-exam",
     "ws-tyr/kv-server",
+    "ws-tyr/try-macros",
     #    "ws-rpc/prost-demo",
     #    "ws-rpc/grpc-tonic",
     #    "ws-rpc/btc-payment-grpc",
