@@ -1,7 +1,7 @@
-use try_macros::RawBuilder;
+use try_macros::{Builder, RawBuilder};
 
 #[allow(dead_code)]
-#[derive(Debug, RawBuilder)]
+#[derive(Debug, RawBuilder, Builder)]
 pub struct Command {
     executable: String,
     args: Vec<String>,

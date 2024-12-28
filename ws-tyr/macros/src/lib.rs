@@ -19,3 +19,12 @@ pub fn query(input: TokenStream) -> TokenStream {
 pub fn derive_raw_builder(input: TokenStream) -> TokenStream {
     BuilderContext::render(input).unwrap().parse().unwrap()
 }
+
+use syn::{parse_macro_input, DeriveInput};
+
+#[proc_macro_derive(Builder)]
+pub fn derive_builder(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+    println!("{:#?}", input);
+    TokenStream::default()
+}

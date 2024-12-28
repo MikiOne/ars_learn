@@ -8,4 +8,8 @@ proc-macro = true
 
 [dependencies]
 anyhow = "1"
-askama = "=0.11" # 处理 jinjia 模板，模板需要放在和 src 平行的 templates 目录下
+# 处理 jinjia 模板，模板需要放在和 src 平行的 templates 目录下
+askama = "=0.11"
+syn = { version = "2.0.91", features = ["extra-traits"] }
+proc-macro2 = "1" # proc-macro 的封装
+quote = "1" # 用于生成代码的 TokenStream
